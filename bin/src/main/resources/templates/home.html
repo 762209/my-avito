@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>My avito</title>
+	</head>
+	<body>
+		<h1>Choose ad type</h1>
+			<form th:method="GET">
+				<select name="category">
+					<option disabled>Выберите категорию</option>
+					<option disabled>ТРАНСПОРТ</option>
+					<option value="car">Автомобили</option>
+					<option value="motorcycle">Мотоциклы</option>
+					<option value="truck_and_special_machinery">Грузовики и спецтехника</option>
+					<option disabled value>НЕДВИЖИМОСТЬ</option>
+					<option value="apartments">Квартиры</option>
+					<option value="house">Дома</option>
+					<option value="garage">Гаражи</option>
+					<option disabled>РАБОТА</option>
+					<option value="cv">Резюме</option>
+					<option value="vacancy">Вакансии</option>
+				</select>
+				<input type="submit" value="Выбрать"/>
+			</form>
+		<div th:each="ad : ${ads}">
+			<img th:src="'data:image/png;base64,'+${imgUtil.getImgData(ad.getPhotos.get(0).getPhoto())}" 
+				width=50px height=50px/> </br>
+			<span th:text="${ad.name}" /> </br>
+			<span th:text="${ad.description}" /> </br>
+			<span th:text="${ad.price}" /> </br>
+			<span th:text="${#temporals.format(ad.createdAt,'dd-MM-yyyy HH:mm')}" /> </br>
+			</br>
+		</div>
+	</body>
+</html>

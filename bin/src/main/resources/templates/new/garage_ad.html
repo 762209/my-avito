@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>New house ad</title>
+	</head>
+	<body>
+		<h1>Create ad</h1>
+		<form th:method="POST" th:action="@{/new/garage_ad}" th:object="${adObject}" id="adForm" enctype="multipart/form-data">
+			<label for="name">Имя: </label>
+			<input type="text" th:field="*{name}" /> </br>
+			
+			<label for="description">Описание: </label>
+			<input type="text" th:field="*{description}" /> </br>
+			
+			<label for="price">Цена: </label>
+			<input type="number" th:field="*{price}" /> </br>
+			
+			<label for="city">Город: </label>
+			<input type="text" th:field="*{city}" /> </br>
+			
+			<label for="adress">Адрес: </label>
+			<input type="text" th:field="*{adress}" /> </br>
+			
+			<label for="photo">Фото: </label>
+			<input type="file" multiple th:name="photoFiles"  accept="image/png"/> </br>
+			
+			
+			<label for="floorArea">Площадь: </label>
+			<input type="number" th:field="${realEstateObject.floorArea}" /> </br>
+			
+			
+			<input type="submit" value="Создать"/>
+		</form>
+	</body>
+</html>
