@@ -30,7 +30,7 @@ public class Transport implements Serializable {
 	private int mileage;
 	private TransportCategory transportCategory;
 	private Car carAd;
-	private TruckSpecMach truckSpecMach;
+	private TruckSpecMach truckSpecMachAd;
 	
 	public enum TransportCategory {
 		CAR, MOTORCYCLE, TRUCK_AND_SPECIAL_MACHINERY

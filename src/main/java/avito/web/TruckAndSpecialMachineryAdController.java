@@ -62,7 +62,7 @@ public class TruckAndSpecialMachineryAdController {
 		
 		TruckSpecMach truckSpeclMachEntity = truckSpeclMachRepo.save(truckSpecMachObject);
 		
-		transportObject.setTruckSpecMach(truckSpeclMachEntity);
+		transportObject.setTruckSpecMachAd(truckSpeclMachEntity);
 		transportObject.setTransportCategory(TransportCategory.TRUCK_AND_SPECIAL_MACHINERY);
 		Transport transportEntity = transportRepo.save(transportObject);
 		

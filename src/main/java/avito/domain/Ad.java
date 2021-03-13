@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
@@ -39,15 +40,28 @@ public class Ad implements Serializable{
 	private Transport transportAd;
 	@Column(length = 1024)
 	private RealEstate realEstateAd;
-	
 	@Enumerated(EnumType.STRING)
 	private AdCategory adCategory;
+	
+	
 	
 	@PrePersist
 	void createdAt() {
 		this.createdAt = LocalDateTime.now();
 	}
+
+	public Ad() {}
 	
+	public Ad(String name, String description, long price,
+			String city, String adress, AdCategory category) {
+		this.name = name;
+		this.description = description;
+		this.price = price;
+		this.city = city;
+		this.adress = adress;
+		this.adCategory = category;
+	}
+
 	public enum AdCategory {
 		TRANSPORT, REAL_ESTATE, SERVICE, ANIMAL;
 	}
