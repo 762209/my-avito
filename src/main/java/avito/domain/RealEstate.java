@@ -2,6 +2,7 @@ package avito.domain;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -25,12 +26,8 @@ public class RealEstate implements Serializable{
 	private Long id;
 	
 	private int floorArea;
+	@Column(length = 1024)
 	private Apartments apartmentsAd;
+	@Column(length = 1024)
 	private House houseAd;
-	@Enumerated(EnumType.STRING)
-	private RealEstateCategory realEstateCategory;
-	
-	public enum RealEstateCategory {
-		APARTMENTS, HOUSES, GARAGE;
-	}
 }

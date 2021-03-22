@@ -19,5 +19,6 @@ public class Ad_ {
 	public static volatile ListAttribute<Ad, Photo> photos;
 	public static volatile SingularAttribute<Ad, Transport> transportAd;
 	public static volatile SingularAttribute<Ad, RealEstate> realEstateAd;
-	public static volatile SingularAttribute<Ad, AdCategory> adCategory; 
+	public static volatile SingularAttribute<Ad, AdCategory> adCategory;
+	public static volatile SingularAttribute<Ad, User> user; 
 }

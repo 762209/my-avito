@@ -3,6 +3,7 @@ package avito.domain;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,11 +29,8 @@ public class Transport implements Serializable {
 	private String color;
 	private String manufactureYear;
 	private int mileage;
-	private TransportCategory transportCategory;
+	@Column(length = 1024)
 	private Car carAd;
+	@Column(length = 1024)
 	private TruckSpecMach truckSpecMachAd;
-	
-	public enum TransportCategory {
-		CAR, MOTORCYCLE, TRUCK_AND_SPECIAL_MACHINERY
-	}
 }

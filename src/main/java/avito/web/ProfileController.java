@@ -1,5 +1,10 @@
 package avito.web;
 
+import static avito.specifications.AdSpecification.hasCategory;
+import static avito.specifications.AdSpecification.hasCity;
+import static avito.specifications.AdSpecification.hasName;
+import static avito.specifications.AdSpecification.hasUser;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -7,12 +12,15 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import avito.data.AdRepository;
+import avito.data.UserRepository;
 import avito.domain.Ad;
 import avito.domain.Apartments;
 import avito.domain.Car;
@@ -22,18 +30,16 @@ import avito.domain.Transport;
 import avito.domain.TruckSpecMach;
 import avito.domain.User;
 
-import static avito.specifications.AdSpecification.*;
-
-
 @Controller
-@RequestMapping("/home")
-public class HomeController {
-	private AdRepository adRepository;
-	
-	public HomeController(AdRepository adRepository) {
-		this.adRepository = adRepository;
-	}
+@RequestMapping("/profile")
+public class ProfileController {
+	private UserRepository userRepo;
+	private AdRepository adRepo;
 
+	public ProfileController(AdRepository adRepo) {
+		this.adRepo = adRepo;
+	}
+	
 	@ModelAttribute("search")
 	public Ad search() {
 		Ad ad = new Ad();
@@ -46,7 +52,7 @@ public class HomeController {
 		return ad;
 	}
 	
-	@GetMapping
+	@GetMapping()
 	public String search(@ModelAttribute Ad search, Model model, @AuthenticationPrincipal User user) {
 		return listByPage(search, model, user , 1);
 	}
@@ -55,24 +61,25 @@ public class HomeController {
 			@PathVariable("pageNumber") int currentPage) {
 		
 		Specification<Ad> spec = Specification.where(hasName(search))
-				  							  .and(hasCity(search))
-				  							  .and(hasCategory(search));
+				  								.and(hasCity(search))
+				  								.and(hasCategory(search))
+				  								.and(hasUser(user));
 		PageRequest pageRequest = PageRequest.of( (currentPage-1), 3, Sort.by("createdAt").descending());
-		Page<Ad> page = adRepository.findAll(spec, pageRequest);
+		Page<Ad> page = adRepo.findAll(spec, pageRequest);
 		
 		model.addAttribute("page", page);
 		model.addAttribute("imgUtil", new ImageUtil());
 		model.addAttribute("currUser", user);
 		
-		return "home";
+		return "profile";
 	}
-	@GetMapping("/show/{id}")
-	public String show(Model model, @PathVariable("id") long id) {
-		Ad ad = adRepository.findById(id)
-							.get();
-		model.addAttribute("ad", ad);
-		model.addAttribute("imgUtil", new ImageUtil());
+	@PostMapping("/delete/{id}")
+	public String deleteAd(@PathVariable("id") long id, @AuthenticationPrincipal User user) {
+		Ad ad = adRepo.findById(id).get();
+		user.getAds().remove(ad);
+		adRepo.delete(ad);
+		userRepo.save(user);
 		
-		return "show";
+		return "redirect:/profile";
 	}
 }

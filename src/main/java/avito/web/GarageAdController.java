@@ -3,6 +3,7 @@ package avito.web;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,17 +16,19 @@ import org.springframework.web.multipart.MultipartFile;
 import avito.data.AdRepository;
 import avito.data.PhotoRepository;
 import avito.data.RealEstateRepository;
+import avito.data.UserRepository;
 import avito.domain.Ad;
 import avito.domain.Photo;
 import avito.domain.RealEstate;
+import avito.domain.User;
 import avito.domain.Ad.AdCategory;
-import avito.domain.RealEstate.RealEstateCategory;
 import lombok.AllArgsConstructor;
 
 @Controller
 @RequestMapping("/new/garage_ad")
 @AllArgsConstructor
 public class GarageAdController {
+	private final UserRepository userRepo;
 	private final AdRepository adRepo;
 	private final PhotoRepository photoRepo;
 	private final RealEstateRepository realEstateRepo;
@@ -46,7 +49,8 @@ public class GarageAdController {
 	
 	@PostMapping()
 	public String processAd(Ad adObject, RealEstate realEstateObject,
-			@RequestParam("photoFiles") List<MultipartFile> photoFiles) throws IOException {
+			@RequestParam("photoFiles") List<MultipartFile> photoFiles,
+			@AuthenticationPrincipal User user) throws IOException {
 		
 		for (MultipartFile photoFile : photoFiles) {
 			byte[] bytes = photoFile.getBytes();
@@ -54,12 +58,14 @@ public class GarageAdController {
 			adObject.getPhotos().add(photoEntity);
 		}
 		
-		realEstateObject.setRealEstateCategory(RealEstateCategory.GARAGE);
 		RealEstate realEstateEntity = realEstateRepo.save(realEstateObject);
 		
 		adObject.setRealEstateAd(realEstateEntity);
-		adObject.setAdCategory(AdCategory.REAL_ESTATE);
-		adRepo.save(adObject);
+		adObject.setAdCategory(AdCategory.GARAGE);
+		adObject.setUser(user);
+		Ad adEntity = adRepo.save(adObject);
+		user.getAds().add(adEntity);
+		userRepo.save(user);
 		
 		return "redirect:/new/garage_ad";
 	}

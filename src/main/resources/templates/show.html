@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+	</head>
+	<body>
+		<span><h1>[[${ad.name}]]</h1></span> </br>
+		
+		
+		<img th:if="${ad.getPhotos.size() == 0}"
+			 th:src="@{/images/no_image.png}"
+			 width=50px height=50px /> </br>
+			 
+		<div th:if="${ad.getPhotos.size() > 0}">
+			<img th:src="'data:image/png;base64,'+${imgUtil.getImgData(ad.getPhotos.get(0).getPhoto())}"
+			 	 th:id="mainPhoto"
+			 	 width=200px height=200px /> </br>
+			 <span th:each="photo : ${ad.getPhotos}">
+				<img th:src="'data:image/png;base64,'+${imgUtil.getImgData(photo.getPhoto())}"
+				 	 th:class="photo"
+					 width=50px height=50px />
+			 </span>
+		</div>
+		<span>Описание: [[${ad.description}]]</span> </br>
+		<span>Цена: [[${ad.price}]]</span> </br>
+		<div th:if="${ad.adCategory == T(avito.domain.Ad$AdCategory).CAR or
+					  ad.adCategory == T(avito.domain.Ad$AdCategory).MOTORCYCLE or
+					  ad.adCategory == T(avito.domain.Ad$AdCategory).TRUCK_AND_SPECIAL_MACHINERY}">
+			<span>Модель: [[${ad.transportAd.model}]]</span> </br>
+			<span>Марка: [[${ad.transportAd.brand}]]</span> </br>
+			<span>Цвет: [[${ad.transportAd.color}]]</span> </br>
+			<span>Год выпуска: [[${ad.transportAd.manufactureYear}]]</span> </br>
+			<span>Пробег: [[${ad.transportAd.mileage}]]</span> </br>
+			
+			<div th:if="${ad.adCategory == T(avito.domain.Ad$AdCategory).CAR}">
+				<span>Коробка передач: [[${ad.transportAd.carAd.transmission}]]</span> </br>
+				<span>Привод: [[${ad.transportAd.carAd.driveType}]]</span> </br>
+				<span>Тип двигателя: [[${ad.transportAd.carAd.enginesType}]]</span> </br>
+			</div>
+			<div th:if="${ad.adCategory == T(avito.domain.Ad$AdCategory).TRUCK_AND_SPECIAL_MACHINERY}">
+				<span>Наработка: [[${ad.transportAd.truckSpecMachAd.operatingTime}]]</span> </br>
+			</div>
+		</div>
+		<div th:if="${ad.adCategory == T(avito.domain.Ad$AdCategory).APARTMENTS or
+					  ad.adCategory == T(avito.domain.Ad$AdCategory).HOUSES}">
+			<span>Площадь: [[${ad.realEstateAd.floorArea}]]</span> </br>
+			
+			<div th:if="${ad.adCategory == T(avito.domain.Ad$AdCategory).APARTMENTS} ">
+				<span>Количество комнат: [[${ad.realEstateAd.apartmentsAd.roomsNumber}]]</span> </br>
+				<span>Этаж: [[${ad.realEstateAd.apartmentsAd.floorLevel}]]</span> </br>
+			</div>
+			<div th:if="${ad.adCategory == T(avito.domain.Ad$AdCategory).HOUSES} ">
+				<span>Номер квартиры: [[${ad.realEstateAd.houseAd.landArea}]]</span> </br>
+				<span>Количество этажей: [[${ad.realEstateAd.houseAd.floorLevels}]]</span> </br>
+			</div>
+		</div>
+	</body>
+	<script>
+		let mainPhoto = document.getElementById("mainPhoto");
+		let photos = document.getElementsByClassName("photo");
+		
+		for (let i = 0; i < photos.length; i++) {
+			let currImage = photos[i];
+			currImage.onmouseover = function() {
+				mainPhoto.src = currImage.src;
+			}
+		}
+	</script>
+</html>

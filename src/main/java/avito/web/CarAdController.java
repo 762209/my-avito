@@ -4,6 +4,7 @@ package avito.web;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,11 +18,12 @@ import avito.data.AdRepository;
 import avito.data.CarRepository;
 import avito.data.PhotoRepository;
 import avito.data.TransportRepository;
+import avito.data.UserRepository;
 import avito.domain.Ad;
 import avito.domain.Car;
 import avito.domain.Photo;
 import avito.domain.Transport;
-import avito.domain.Transport.TransportCategory;
+import avito.domain.User;
 import lombok.AllArgsConstructor;
 import avito.domain.Ad.AdCategory;
 
@@ -29,6 +31,7 @@ import avito.domain.Ad.AdCategory;
 @RequestMapping("/new/car_ad")
 @AllArgsConstructor
 public class CarAdController {
+	private final UserRepository userRepo;
 	private final AdRepository adRepo;
 	private final PhotoRepository photoRepo;
 	private final TransportRepository transportRepo;
@@ -53,7 +56,8 @@ public class CarAdController {
 	}
 	@PostMapping()
 	public String processAd(Ad adObject, Transport transportObject, Car carObject,
-			@RequestParam("photoFiles") List<MultipartFile> photoFiles) throws IOException {
+			@RequestParam("photoFiles") List<MultipartFile> photoFiles,
+			@AuthenticationPrincipal User user) throws IOException {
 		
 		for (MultipartFile photoFile : photoFiles) {
 			byte[] bytes = photoFile.getBytes();
@@ -64,12 +68,15 @@ public class CarAdController {
 		Car carEntity = carRepo.save(carObject);
 		
 		transportObject.setCarAd(carEntity);
-		transportObject.setTransportCategory(TransportCategory.CAR);
 		Transport transportEntity = transportRepo.save(transportObject);
 		
-		adObject.setAdCategory(AdCategory.TRANSPORT);
+		adObject.setAdCategory(AdCategory.CAR);
 		adObject.setTransportAd(transportEntity);
-		adRepo.save(adObject);
+		adObject.setUser(user);
+		Ad adEntity = adRepo.save(adObject);
+		user.getAds().add(adEntity);
+		userRepo.save(user);
+		
 		
 		return "redirect:/new/car_ad";
 	}

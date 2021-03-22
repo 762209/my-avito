@@ -3,6 +3,7 @@ package avito.web;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,17 +16,19 @@ import org.springframework.web.multipart.MultipartFile;
 import avito.data.AdRepository;
 import avito.data.PhotoRepository;
 import avito.data.TransportRepository;
+import avito.data.UserRepository;
 import avito.domain.Ad;
 import avito.domain.Photo;
 import avito.domain.Transport;
+import avito.domain.User;
 import avito.domain.Ad.AdCategory;
-import avito.domain.Transport.TransportCategory;
 import lombok.AllArgsConstructor;
 
 @Controller
 @RequestMapping("/new/motorcycle_ad")
 @AllArgsConstructor
 public class MotorcycleAdController {
+	private final UserRepository userRepo;
 	private final AdRepository adRepo;
 	private final PhotoRepository photoRepo;
 	private final TransportRepository transportRepo;
@@ -45,7 +48,8 @@ public class MotorcycleAdController {
 	}
 	@PostMapping()
 	public String processAd(Ad adObject, Transport transportObject,
-			@RequestParam("photoFiles") List<MultipartFile> photoFiles) throws IOException {
+			@RequestParam("photoFiles") List<MultipartFile> photoFiles,
+			@AuthenticationPrincipal User user) throws IOException {
 		
 		for (MultipartFile photoFile : photoFiles) {
 			byte[] bytes = photoFile.getBytes();
@@ -53,12 +57,14 @@ public class MotorcycleAdController {
 			adObject.getPhotos().add(photoEntity);
 		}
 		
-		transportObject.setTransportCategory(TransportCategory.MOTORCYCLE);
 		Transport transportEntity = transportRepo.save(transportObject);
 		
-		adObject.setAdCategory(AdCategory.TRANSPORT);
+		adObject.setAdCategory(AdCategory.MOTORCYCLE);
 		adObject.setTransportAd(transportEntity);
-		adRepo.save(adObject);
+		adObject.setUser(user);
+		Ad adEntity = adRepo.save(adObject);
+		user.getAds().add(adEntity);
+		userRepo.save(user);
 		
 		return "redirect:/new/motorcycle_ad";
 	}

@@ -8,5 +8,4 @@ import avito.domain.Ad;
 
 public interface AdRepository extends PagingAndSortingRepository<Ad, Long>,
 JpaSpecificationExecutor<Ad>{
-	
 }

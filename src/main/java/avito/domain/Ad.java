@@ -12,10 +12,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
@@ -42,8 +42,8 @@ public class Ad implements Serializable{
 	private RealEstate realEstateAd;
 	@Enumerated(EnumType.STRING)
 	private AdCategory adCategory;
-	
-	
+	@ManyToOne
+	private User user;
 	
 	@PrePersist
 	void createdAt() {
@@ -63,6 +63,6 @@ public class Ad implements Serializable{
 	}
 
 	public enum AdCategory {
-		TRANSPORT, REAL_ESTATE, SERVICE, ANIMAL;
+		CAR, MOTORCYCLE, TRUCK_AND_SPECIAL_MACHINERY, APARTMENTS, HOUSES, GARAGE, SERVICE, ANIMAL;
 	}
 }

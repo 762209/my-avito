@@ -1,9 +1,14 @@
 package avito.specifications;
 
+import javax.persistence.FetchType;
+import javax.persistence.criteria.Fetch;
+
 import org.springframework.data.jpa.domain.Specification;
 
 import avito.domain.Ad;
 import avito.domain.Ad_;
+import avito.domain.User;
+import avito.domain.User_;
 
 public class AdSpecification{
 
@@ -22,6 +27,24 @@ public class AdSpecification{
 		}
 		return ((root, criteriaQuery, criteriaBuilder) -> {
 			return criteriaBuilder.equal(root.get(Ad_.city), criteria.getCity());
+		});
+	}
+	
+	public static Specification<Ad> hasCategory(Ad criteria) {
+		if (criteria.getAdCategory() == null) {
+			return null;
+		}
+		return ((root, criteriaQuery, criteriaBuilder) -> {
+			return criteriaBuilder.equal(root.get(Ad_.adCategory), criteria.getAdCategory());
+		});
+	}
+	
+	public static Specification<Ad> hasUser(User user) {
+		if (user == null) {
+			return null;
+		}
+		return ((root, criteriaQuery, criteriaBuilder) -> {
+			return criteriaBuilder.equal(root.get(Ad_.user).get(User_.username), user.getUsername());
 		});
 	}
 }
