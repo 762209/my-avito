@@ -1,8 +1,5 @@
 package avito.specifications;
 
-import javax.persistence.FetchType;
-import javax.persistence.criteria.Fetch;
-
 import org.springframework.data.jpa.domain.Specification;
 
 import avito.domain.Ad;

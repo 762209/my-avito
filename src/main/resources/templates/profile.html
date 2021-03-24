@@ -45,31 +45,40 @@
 			<span th:text="${ad.price}" /> </br>
 			<span th:text="${#temporals.format(ad.createdAt,'dd-MM-yyyy HH:mm')}" /> </br>
 			<a th:href="@{'/home/show/' + ${ad.id}}">Открыть объявление</a> </br>
-			<form th:method="delete" th:action="@{/profile/delete/{id}(id=${ad.getId()})}">
-				<input type="submit" value="Удалить" />
-			</form>
+			<a th:href="@{/profile/delete/{id}(id=${ad.getId()})}">Удалить</a> </br>
+			<div th:switch="${ad.adCategory}">
+				<a th:case="${T(avito.domain.Ad$AdCategory).ANIMAL}" th:href="@{/animal_ad/{id}/update(id=${ad.getId()})}">Обновить</a>
+				<a th:case="${T(avito.domain.Ad$AdCategory).SERVICE}" th:href="@{/service_ad/{id}/update(id=${ad.getId()})}">Обновить</a>
+				<a th:case="${T(avito.domain.Ad$AdCategory).CAR}" th:href="@{/car_ad/{id}/update(id=${ad.getId()})}">Обновить</a>
+				<a th:case="${T(avito.domain.Ad$AdCategory).MOTORCYCLE}" th:href="@{/motorcycle_ad/{id}/update(id=${ad.getId()})}">Обновить</a>
+				<a th:case="${T(avito.domain.Ad$AdCategory).TRUCK_AND_SPECIAL_MACHINERY}" th:href="@{/truck_and_special_machinery_ad/{id}/update(id=${ad.getId()})}">Обновить</a>
+				<a th:case="${T(avito.domain.Ad$AdCategory).APARTMENTS}" th:href="@{/apartments_ad/{id}/update(id=${ad.getId()})}">Обновить</a>
+				<a th:case="${T(avito.domain.Ad$AdCategory).HOUSES}" th:href="@{/house_ad/{id}/update(id=${ad.getId()})}">Обновить</a>
+				<a th:case="${T(avito.domain.Ad$AdCategory).GARAGE}" th:href="@{/garage_ad/{id}/update(id=${ad.getId()})}">Обновить</a>
+			</div>
+			
 		</div>
 		<div>
 			Всего объявлений: [[${page.totalElements}]] - Cтраницa [[${page.number + 1}]] из [[${page.totalPages < 1 ? 1 : page.totalPages}]] 
 			&nbsp; - &nbsp;
-			<a th:if="${page.number + 1 > 1}" th:href="@{/home/page/1}">Начало</a>
+			<a th:if="${page.number + 1 > 1}" th:href="@{/profile/page/1}">Начало</a>
 			<span th:unless="${page.number + 1 > 1}">Начало</span>
 			&nbsp;
-			<a th:if="${page.number + 1 > 1}" th:href="@{'/home/page/' + ${page.number + 1 - 1}}">Предыдущая</a>
+			<a th:if="${page.number + 1 > 1}" th:href="@{'/profile/page/' + ${page.number + 1 - 1}}">Предыдущая</a>
 			<span th:unless="${page.number + 1 > 1}">Предыдущая</span>
 			&nbsp;
 			<span th:each="i : ${#numbers.sequence(page.number + 1 > 2 ? page.number + 1 - 2 : 1,
  												   page.totalPages < 1 ? 1 : page.totalPages > 2 + page.number + 1 ? page.number + 1 + 2 : page.totalPages)}">
 				<span>
-					<a th:if="${i != page.number + 1}" th:href="@{'/home/page/' + ${i}}">[[${i}]]</a>
+					<a th:if="${i != page.number + 1}" th:href="@{'/profile/page/' + ${i}}">[[${i}]]</a>
 					<span th:unless="${i != page.number + 1}">[[${i}]]</span>
 					&nbsp;
 				</span>
 			</span>
-			<a th:if="${page.number + 1 < page.totalPages}" th:href="@{'/home/page/' + ${page.number + 1 + 1}}">Следующая</a>
+			<a th:if="${page.number + 1 < page.totalPages}" th:href="@{'/profile/page/' + ${page.number + 1 + 1}}">Следующая</a>
 			<span th:unless="${page.number + 1 < page.totalPages}">Следующая</span>
 			&nbsp;
-			<a th:if="${page.number + 1 < page.totalPages}" th:href="@{'/home/page/' + ${page.totalPages}}">Конец</a>
+			<a th:if="${page.number + 1 < page.totalPages}" th:href="@{'/profile/page/' + ${page.totalPages}}">Конец</a>
 			<span th:unless="${page.number + 1 < page.totalPages}">Конец</span>
 		</div>
 	</body>

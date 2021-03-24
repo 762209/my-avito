@@ -44,7 +44,8 @@
 			</div>
 		</div>
 		<div th:if="${ad.adCategory == T(avito.domain.Ad$AdCategory).APARTMENTS or
-					  ad.adCategory == T(avito.domain.Ad$AdCategory).HOUSES}">
+					  ad.adCategory == T(avito.domain.Ad$AdCategory).HOUSES or
+					  ad.adCategory == T(avito.domain.Ad$AdCategory).GARAGE}">
 			<span>Площадь: [[${ad.realEstateAd.floorArea}]]</span> </br>
 			
 			<div th:if="${ad.adCategory == T(avito.domain.Ad$AdCategory).APARTMENTS} ">

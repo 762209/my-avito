@@ -1,0 +1,52 @@
+@charset "UTF-8";
+
+.userBar {
+	overflow: hidden;
+	background-color: WhiteSmoke;
+	font-family: Arial;
+}
+
+.userBar a {
+	float: left;
+  	font-size: 14px;
+  	color: Silver;
+  	text-align: center;
+ 	padding: 14px 16px;
+ 	text-decoration: none;
+}
+.newAd {
+  float: left;
+  overflow: hidden;
+}
+.newAd .newAdBtn {
+  font-size: 14px; 
+  border: none;
+  outline: none;
+  color: Silver;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit; /* Important for vertical align on mobile phones */
+  margin: 0; /* Important for vertical align on mobile phones */
+}
+.userBar a:hover, .newAd:hover .newAdBtn {
+  color: red;
+}
+.newAd-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+.newAd-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+.newAd:hover .newAd-content {
+  display: block;
+}

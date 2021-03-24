@@ -12,15 +12,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import avito.data.AdRepository;
-import avito.data.UserRepository;
 import avito.domain.Ad;
 import avito.domain.Apartments;
 import avito.domain.Car;
@@ -33,7 +30,6 @@ import avito.domain.User;
 @Controller
 @RequestMapping("/profile")
 public class ProfileController {
-	private UserRepository userRepo;
 	private AdRepository adRepo;
 
 	public ProfileController(AdRepository adRepo) {
@@ -73,13 +69,13 @@ public class ProfileController {
 		
 		return "profile";
 	}
-	@PostMapping("/delete/{id}")
+	@GetMapping("/delete/{id}")
 	public String deleteAd(@PathVariable("id") long id, @AuthenticationPrincipal User user) {
-		Ad ad = adRepo.findById(id).get();
-		user.getAds().remove(ad);
+		Ad ad = adRepo.findById(id)
+				.orElseThrow( () -> new IllegalArgumentException("Invalid user Id: " + id) );
 		adRepo.delete(ad);
-		userRepo.save(user);
 		
 		return "redirect:/profile";
 	}
+	
 }

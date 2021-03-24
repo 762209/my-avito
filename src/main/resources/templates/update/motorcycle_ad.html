@@ -7,7 +7,12 @@
 	</head>
 	<body>
 		<h1>Create car ad</h1>
-		<form th:method="POST" th:action="@{/motorcycle_ad/new}" th:object="${adObject}" id="adForm" enctype="multipart/form-data">
+		<form action="#"
+			th:action="@{/motorcycle_ad/{id}/update(id=${ad.id})}"
+			th:method="POST"
+			th:object="${ad}"
+			enctype="multipart/form-data">
+			
 			<label for="name">Имя: </label>
 			<input type="text" th:field="*{name}" /> </br>
 			
@@ -28,19 +33,19 @@
 			
 			
 			<label for="model">Модель: </label>
-			<input type="text" th:field="${transportObject.model}" /> </br>
+			<input type="text" th:field="*{transportAd.model}" /> </br>
 			
 			<label for="brand">Бренд: </label>
-			<input type="text" th:field="${transportObject.brand}" /> </br>
+			<input type="text" th:field="*{transportAd.brand}" /> </br>
 			
 			<label for="color">Цвет: </label>
-			<input type="text" th:field="${transportObject.color}" /> </br>
+			<input type="text" th:field="*{transportAd.color}" /> </br>
 			
 			<label for="manufactureYear">Год выпуска: </label>
-			<input type="text" th:field="${transportObject.manufactureYear}" /> </br>
+			<input type="text" th:field="*{transportAd.manufactureYear}" /> </br>
 			
 			<label for="mileage">Пробег: </label>
-			<input type="number" th:field="${transportObject.mileage}" /> </br>
+			<input type="number" th:field="*{transportAd.mileage}" /> </br>
 			
 			<input type="submit" value="Создать"/>
 		</form>

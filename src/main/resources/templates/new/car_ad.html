@@ -7,7 +7,7 @@
 	</head>
 	<body>
 		<h1>Create car ad</h1>
-		<form th:method="POST" th:action="@{/new/car_ad}" th:object="${adObject}" id="adForm" enctype="multipart/form-data">
+		<form th:method="POST" th:action="@{/car_ad/new}" th:object="${adObject}" id="adForm" enctype="multipart/form-data">
 			<label for="name">Имя: </label>
 			<input type="text" th:field="*{name}" /> </br>
 			

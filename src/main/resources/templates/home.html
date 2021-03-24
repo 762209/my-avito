@@ -4,12 +4,23 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>My avito</title>
+		<link rel="stylesheet" th:href="@{/styles.css}" />
 	</head>
 	<body>
-		<div th:if="${currUser != null}">
+		<div th:if="${currUser != null}" class="userBar">
 			<h2 th:text="${currUser.fullname}"></h2>
+			<a th:href="@{/profile}">Мои объявления</a>
+			<div class="newAd">
+				<button class="newAdBtn"> Разместить объявление
+					<i class="newAdCategory"></i>
+				</button>
+				<div class="newAd-content">
+					<a th:href="@{/animal_ad/new}">Животные</a>
+					<a th:href="@{/car_ad/new}">Машина</a>
+				</div>
+			</div>
 			<form method="POST" th:action="@{/logout}">
-				<input type="submit" value="Logout"/>
+				<input type="submit" value="Выйти"/>
 			</form>
 		</div>
 		

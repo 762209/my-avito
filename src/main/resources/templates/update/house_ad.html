@@ -3,11 +3,16 @@
       xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta charset="UTF-8">
-		<title>New apartments ad</title>
+		<title>New house ad</title>
 	</head>
 	<body>
 		<h1>Create ad</h1>
-		<form th:method="POST" th:action="@{/apartments_ad/new}" th:object="${adObject}" id="adForm" enctype="multipart/form-data">
+		<form action="#"
+			th:action="@{/house_ad/{id}/update(id=${ad.id})}"
+			th:object="${ad}"
+			th:method="POST"
+			enctype="multipart/form-data">
+			
 			<label for="name">Имя: </label>
 			<input type="text" th:field="*{name}" /> </br>
 			
@@ -28,12 +33,12 @@
 			
 			
 			<label for="floorArea">Площадь: </label>
-			<input type="number" th:field="${realEstateObject.floorArea}" /> </br>
+			<input type="number" th:field="*{realEstateAd.floorArea}" /> </br>
 			
-			<label for="roomsNumber">Площадь: </label>
-			<input type="number" th:field="${apartmentsObject.roomsNumber}" /> </br>
-			<label for="floorLevel">Этаж: </label>
-			<input type="number" th:field="${apartmentsObject.floorLevel}" /> </br>
+			<label for="landArea">Площадь участка: </label>
+			<input type="number" th:field="*{realEstateAd.houseAd.landArea}" /> </br>
+			<label for="floorLevels">Колличество этажей: </label>
+			<input type="number" th:field="*{realEstateAd.houseAd.floorLevels}" /> </br>
 			
 			<input type="submit" value="Создать"/>
 		</form>

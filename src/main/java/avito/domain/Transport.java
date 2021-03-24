@@ -3,11 +3,13 @@ package avito.domain;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 import lombok.Data;
 
@@ -15,9 +17,6 @@ import lombok.Data;
 @Data
 public class Transport implements Serializable {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3344904810182624983L;
 
 	@Id
@@ -29,8 +28,10 @@ public class Transport implements Serializable {
 	private String color;
 	private String manufactureYear;
 	private int mileage;
-	@Column(length = 1024)
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn
 	private Car carAd;
-	@Column(length = 1024)
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn
 	private TruckSpecMach truckSpecMachAd;
 }

@@ -5,15 +5,17 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 
 import lombok.Data;
@@ -34,21 +36,20 @@ public class Ad implements Serializable{
 	private String city;
 	private String adress;
 	private LocalDateTime createdAt;
-	@OneToMany(targetEntity = Photo.class)
+	
+	@OneToMany(targetEntity = Photo.class, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Photo> photos = new ArrayList<Photo>();
-	@Column(length = 1024)
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn
 	private Transport transportAd;
-	@Column(length = 1024)
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn
 	private RealEstate realEstateAd;
 	@Enumerated(EnumType.STRING)
 	private AdCategory adCategory;
-	@ManyToOne
+	@ManyToOne(targetEntity = User.class)
+	@JoinColumn()
 	private User user;
-	
-	@PrePersist
-	void createdAt() {
-		this.createdAt = LocalDateTime.now();
-	}
 
 	public Ad() {}
 	
@@ -61,7 +62,12 @@ public class Ad implements Serializable{
 		this.adress = adress;
 		this.adCategory = category;
 	}
-
+	
+	@PrePersist
+	void createdAt() {
+		this.createdAt = LocalDateTime.now();
+	}
+	
 	public enum AdCategory {
 		CAR, MOTORCYCLE, TRUCK_AND_SPECIAL_MACHINERY, APARTMENTS, HOUSES, GARAGE, SERVICE, ANIMAL;
 	}
