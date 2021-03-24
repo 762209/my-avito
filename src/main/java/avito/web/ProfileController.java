@@ -60,7 +60,7 @@ public class ProfileController {
 				  								.and(hasCity(search))
 				  								.and(hasCategory(search))
 				  								.and(hasUser(user));
-		PageRequest pageRequest = PageRequest.of( (currentPage-1), 3, Sort.by("createdAt").descending());
+		PageRequest pageRequest = PageRequest.of( (currentPage-1), 9, Sort.by("createdAt").descending());
 		Page<Ad> page = adRepo.findAll(spec, pageRequest);
 		
 		model.addAttribute("page", page);

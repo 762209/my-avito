@@ -7,7 +7,7 @@
 	</head>
 	<body>
 		<h1>Регистрация</h1>
-		<form method="POST" th:action="@{/register}" id="registerForm">
+		<form method="POST" th:action="@{/register}" id="registerForm" enctype="multipart/form-data">
 			<label for="username">Логин: </label>
 			<input type="text" name="username" /> </br>
 			
@@ -31,6 +31,9 @@
 			
 			<label for="phone">Телефон: </label>
 			<input type="text" name="phone" /> </br>
+			
+			<label for="photo">Фото: </label>
+			<input type="file" th:name="photoFile"  accept="image/png"/> </br>
 			
 			<input type="submit" value="Register"/>
 		</form>

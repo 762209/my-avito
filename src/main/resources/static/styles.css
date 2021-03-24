@@ -5,14 +5,27 @@
 	background-color: WhiteSmoke;
 	font-family: Arial;
 }
+.userImage {
+	float: left;
+}
 
-.userBar a {
+.userBar a, .userName {
 	float: left;
   	font-size: 14px;
   	color: Silver;
   	text-align: center;
  	padding: 14px 16px;
  	text-decoration: none;
+}
+.userBar input {
+	border: none;
+	font-size: 14px;
+	background-color:  WhiteSmoke;
+	color: Silver;
+	text-align: center;
+	display: inline-block;
+	width:50px;
+	height:44px;
 }
 .newAd {
   float: left;
@@ -28,7 +41,7 @@
   font-family: inherit; /* Important for vertical align on mobile phones */
   margin: 0; /* Important for vertical align on mobile phones */
 }
-.userBar a:hover, .newAd:hover .newAdBtn {
+.userBar a:hover, input:hover, .newAd:hover .newAdBtn {
   color: red;
 }
 .newAd-content {

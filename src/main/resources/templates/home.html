@@ -8,12 +8,22 @@
 	</head>
 	<body>
 		<div th:if="${currUser != null}" class="userBar">
-			<h2 th:text="${currUser.fullname}"></h2>
+		
+			<img th:if="${currUser.getPhoto != null}"
+				 th:src="'data:image/png;base64,'+${imgUtil.getImgData(currUser.getPhoto.getPhoto())}" 
+				 width=50px height=45px
+				 class="userImage" />
+			<img th:if="${currUser.getPhoto == null}"
+				 th:src="@{/images/no_image.png}"
+				 width=50px height=50px
+				 class="userImage" />
+				 
+			<span class="userName"
+				  th:text="${currUser.fullname}"></span>
+				  
 			<a th:href="@{/profile}">Мои объявления</a>
 			<div class="newAd">
-				<button class="newAdBtn"> Разместить объявление
-					<i class="newAdCategory"></i>
-				</button>
+				<button class="newAdBtn">Разместить объявление</button>
 				<div class="newAd-content">
 					<a th:href="@{/animal_ad/new}">Животные</a>
 					<a th:href="@{/car_ad/new}">Машина</a>
