@@ -3,83 +3,119 @@
       xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta charset="UTF-8">
-		<title>Insert title here</title>
+		<title>My avito</title>
+		<link rel="stylesheet" th:href="@{/profile.css}" />
 	</head>
 	<body>
-		<div th:if="${currUser != null}">
-			<h2 th:text="${currUser.fullname}"></h2>
-			<form method="POST" th:action="@{/logout}">
-				<input type="submit" value="Logout"/>
-			</form>
-		</div>
-		
-		<h1>Choose ad type</h1>
-			<form th:method="GET" th:action="@{/profile}" th:object="${search}">
-				<select name="category" th:field="*{adCategory}">
-					<option th:value='NULL'>Выберите категорию</option>
-					<option th:value='NULL' disabled>ТРАНСПОРТ</option>
-					<option th:value="${T(avito.domain.Ad$AdCategory).CAR}" >Автомобили</option>
-					<option th:value="${T(avito.domain.Ad$AdCategory).MOTORCYCLE}">Мотоциклы</option>
-					<option th:value="${T(avito.domain.Ad$AdCategory).TRUCK_AND_SPECIAL_MACHINERY}">Грузовики и спецтехника</option>
-					<option th:value='NULL' disabled>НЕДВИЖИМОСТЬ</option>
-					<option th:value="${T(avito.domain.Ad$AdCategory).APARTMENTS}">Квартиры</option>
-					<option th:value="${T(avito.domain.Ad$AdCategory).HOUSES}">Дома</option>
-					<option th:value="${T(avito.domain.Ad$AdCategory).GARAGE}">Гаражи</option>
-					<option th:value="${T(avito.domain.Ad$AdCategory).SERVICE}">УСЛУГИ</option>
-					<option th:value="${T(avito.domain.Ad$AdCategory).ANIMAL}">ЖИВОТНЫЕ</option>
-				</select>
+		<nav>
+			<div th:if="${currUser != null}" class="userBar">
+				<img th:if="${currUser.getPhoto != null}"
+					 th:src="'data:image/png;base64,'+${imgUtil.getImgData(currUser.getPhoto.getPhoto())}" 
+					 width=60px height=45px
+					 class="userImage" />
+				<img th:if="${currUser.getPhoto == null}"
+					 th:src="@{/images/no_image.png}"
+					 width=60px height=45px
+					 class="userImage" />
+					 
+				<span class="userName" th:text="${currUser.fullname}" /> 
+				 
+				<a th:href="@{/home}">Главная страница</a>
 				
-				<input type="text" th:field="*{name}" placeholder="Название" />
-				<input type="text" th:field="*{city}" placeholder="Город" />
-				<input type="submit" value="Выбрать" />
-			</form>
-		<div th:each="ad : ${page}">
-			<img th:if="${ad.getPhotos.size() > 0}"
-				 th:src="'data:image/png;base64,'+${imgUtil.getImgData(ad.getPhotos.get(0).getPhoto())}" 
-				 width=50px height=50px/> </br>
-			<img th:if="${ad.getPhotos.size() == 0}"
-				 th:src="@{/images/no_image.png}"
-				 width=50px height=50px/> </br>
-			<span th:text="${ad.name}" /> </br>
-			<span th:text="${ad.description}" /> </br>
-			<span th:text="${ad.price}" /> </br>
-			<span th:text="${#temporals.format(ad.createdAt,'dd-MM-yyyy HH:mm')}" /> </br>
-			<a th:href="@{'/home/show/' + ${ad.id}}">Открыть объявление</a> </br>
-			<a th:href="@{/profile/delete/{id}(id=${ad.getId()})}">Удалить</a> </br>
-			<div th:switch="${ad.adCategory}">
-				<a th:case="${T(avito.domain.Ad$AdCategory).ANIMAL}" th:href="@{/animal_ad/{id}/update(id=${ad.getId()})}">Обновить</a>
-				<a th:case="${T(avito.domain.Ad$AdCategory).SERVICE}" th:href="@{/service_ad/{id}/update(id=${ad.getId()})}">Обновить</a>
-				<a th:case="${T(avito.domain.Ad$AdCategory).CAR}" th:href="@{/car_ad/{id}/update(id=${ad.getId()})}">Обновить</a>
-				<a th:case="${T(avito.domain.Ad$AdCategory).MOTORCYCLE}" th:href="@{/motorcycle_ad/{id}/update(id=${ad.getId()})}">Обновить</a>
-				<a th:case="${T(avito.domain.Ad$AdCategory).TRUCK_AND_SPECIAL_MACHINERY}" th:href="@{/truck_and_special_machinery_ad/{id}/update(id=${ad.getId()})}">Обновить</a>
-				<a th:case="${T(avito.domain.Ad$AdCategory).APARTMENTS}" th:href="@{/apartments_ad/{id}/update(id=${ad.getId()})}">Обновить</a>
-				<a th:case="${T(avito.domain.Ad$AdCategory).HOUSES}" th:href="@{/house_ad/{id}/update(id=${ad.getId()})}">Обновить</a>
-				<a th:case="${T(avito.domain.Ad$AdCategory).GARAGE}" th:href="@{/garage_ad/{id}/update(id=${ad.getId()})}">Обновить</a>
+				<div class="newAd">
+					<button class="newAdBtn">Разместить объявление</button>
+					
+					<div class="newAd-content">
+						<a th:href="@{/animal_ad/new}">Животные</a>
+						<a th:href="@{/apartments_ad/new}">Квартиры</a>
+						<a th:href="@{/car_ad/new}">Машины</a>
+						<a th:href="@{/garage_ad/new}">Гаражи</a>
+						<a th:href="@{/house_ad/new}">Дома</a>
+						<a th:href="@{/motorcycle_ad/new}">Мотоциклы</a>
+						<a th:href="@{/service_ad/new}">Сервисы</a>
+						<a th:href="@{/truck_and_special_machinery_ad/new}">Грузовики и спецтехника</a>
+					</div>
+				</div>
+				
+				<form method="POST" th:action="@{/logout}">
+					<input type="submit" value="Выйти"/>
+				</form>
 			</div>
-			
-		</div>
-		<div>
-			Всего объявлений: [[${page.totalElements}]] - Cтраницa [[${page.number + 1}]] из [[${page.totalPages < 1 ? 1 : page.totalPages}]] 
-			&nbsp; - &nbsp;
-			<a th:if="${page.number + 1 > 1}" th:href="@{/profile/page/1}">Начало</a>
-			<span th:unless="${page.number + 1 > 1}">Начало</span>
-			&nbsp;
-			<a th:if="${page.number + 1 > 1}" th:href="@{'/profile/page/' + ${page.number + 1 - 1}}">Предыдущая</a>
-			<span th:unless="${page.number + 1 > 1}">Предыдущая</span>
-			&nbsp;
-			<span th:each="i : ${#numbers.sequence(page.number + 1 > 2 ? page.number + 1 - 2 : 1,
- 												   page.totalPages < 1 ? 1 : page.totalPages > 2 + page.number + 1 ? page.number + 1 + 2 : page.totalPages)}">
-				<span>
-					<a th:if="${i != page.number + 1}" th:href="@{'/profile/page/' + ${i}}">[[${i}]]</a>
-					<span th:unless="${i != page.number + 1}">[[${i}]]</span>
-					&nbsp;
+		</nav>
+		<main>
+			<div class="navBar">
+				<img th:src="@{/images/avito_logo.png}"
+				 	 width=110px height=30px />
+				<span>Мои объявления</span>
+			</div>
+			<form th:method="GET" th:action="@{/profile}" th:object="${search}">
+				<ul class="search">
+					<li><select name="category" th:field="*{adCategory}">
+							<option th:value='NULL'>Любая категория</option>
+							<option th:value='NULL' disabled>ТРАНСПОРТ</option>
+							<option th:value="${T(avito.domain.Ad$AdCategory).CAR}" >Автомобили</option>
+							<option th:value="${T(avito.domain.Ad$AdCategory).MOTORCYCLE}">Мотоциклы</option>
+							<option th:value="${T(avito.domain.Ad$AdCategory).TRUCK_AND_SPECIAL_MACHINERY}">Грузовики и спецтехника</option>
+							<option th:value='NULL' disabled>НЕДВИЖИМОСТЬ</option>
+							<option th:value="${T(avito.domain.Ad$AdCategory).APARTMENTS}">Квартиры</option>
+							<option th:value="${T(avito.domain.Ad$AdCategory).HOUSES}">Дома</option>
+							<option th:value="${T(avito.domain.Ad$AdCategory).GARAGE}">Гаражи</option>
+							<option th:value="${T(avito.domain.Ad$AdCategory).SERVICE}">УСЛУГИ</option>
+							<option th:value="${T(avito.domain.Ad$AdCategory).ANIMAL}">ЖИВОТНЫЕ</option>
+						</select></li>
+					<li><input type="text" th:field="*{name}" placeholder="Название" /></li>
+					<li><input type="text" th:field="*{city}" placeholder="Город" /></li>
+					<li><input type="submit" value="Найти" /></li>
+				</ul>
+			</form>
+			<div class="adsTable">
+				<div th:each="ad : ${page}" class="addItem">
+					<img th:if="${ad.getPhotos.size() > 0}"
+						 th:src="'data:image/png;base64,'+${imgUtil.getImgData(ad.getPhotos.get(0).getPhoto())}" 
+						 width=300px height=210px/>
+					<img th:if="${ad.getPhotos.size() == 0}"
+						 th:src="@{/images/no_image.png}"
+						 width=300px height=210px/> </br>
+					<a th:href="@{'/home/show/' + ${ad.id}}">[[${ad.name}]]</a> </br>
+					<div id="description" th:text="${ad.description}"/>
+					<span class="price" th:text="${#numbers.formatCurrency(ad.price)}" /> </br>
+					<span class="date" th:text="${#temporals.format(ad.createdAt,'dd-MM-yyyy HH:mm')}" /> </br>
+					<a th:href="@{/profile/delete/{id}(id=${ad.getId()})}">Удалить</a> </br>
+					<div th:switch="${ad.adCategory}">
+						<a th:case="${T(avito.domain.Ad$AdCategory).ANIMAL}" th:href="@{/animal_ad/{id}/update(id=${ad.getId()})}">Обновить</a>
+						<a th:case="${T(avito.domain.Ad$AdCategory).SERVICE}" th:href="@{/service_ad/{id}/update(id=${ad.getId()})}">Обновить</a>
+						<a th:case="${T(avito.domain.Ad$AdCategory).CAR}" th:href="@{/car_ad/{id}/update(id=${ad.getId()})}">Обновить</a>
+						<a th:case="${T(avito.domain.Ad$AdCategory).MOTORCYCLE}" th:href="@{/motorcycle_ad/{id}/update(id=${ad.getId()})}">Обновить</a>
+						<a th:case="${T(avito.domain.Ad$AdCategory).TRUCK_AND_SPECIAL_MACHINERY}" th:href="@{/truck_and_special_machinery_ad/{id}/update(id=${ad.getId()})}">Обновить</a>
+						<a th:case="${T(avito.domain.Ad$AdCategory).APARTMENTS}" th:href="@{/apartments_ad/{id}/update(id=${ad.getId()})}">Обновить</a>
+						<a th:case="${T(avito.domain.Ad$AdCategory).HOUSES}" th:href="@{/house_ad/{id}/update(id=${ad.getId()})}">Обновить</a>
+						<a th:case="${T(avito.domain.Ad$AdCategory).GARAGE}" th:href="@{/garage_ad/{id}/update(id=${ad.getId()})}">Обновить</a>
+					</div>
+				</div>
+			</div>
+			<div class="page">
+				<span>Всего объявлений: [[${page.totalElements}]] - Cтраницa [[${page.number + 1}]] из [[${page.totalPages < 1 ? 1 : page.totalPages}]] </span>
+				&nbsp; - &nbsp;
+				<a th:if="${page.number + 1 > 1}" th:href="@{/profile/page/1}">Начало</a>
+				<span th:unless="${page.number + 1 > 1}">Начало</span>
+				&nbsp;
+				<a th:if="${page.number + 1 > 1}" th:href="@{'/profile/page/' + ${page.number + 1 - 1}}">Предыдущая</a>
+				<span th:unless="${page.number + 1 > 1}">Предыдущая</span>
+				&nbsp;
+				<span th:each="i : ${#numbers.sequence(page.number + 1 > 2 ? page.number + 1 - 2 : 1,
+	 												   page.totalPages < 1 ? 1 : page.totalPages > 2 + page.number + 1 ? page.number + 1 + 2 : page.totalPages)}">
+					<span>
+						<a th:if="${i != page.number + 1}" th:href="@{'/profile/page/' + ${i}}">[[${i}]]</a>
+						<span th:unless="${i != page.number + 1}">[[${i}]]</span>
+						&nbsp;
+					</span>
 				</span>
-			</span>
-			<a th:if="${page.number + 1 < page.totalPages}" th:href="@{'/profile/page/' + ${page.number + 1 + 1}}">Следующая</a>
-			<span th:unless="${page.number + 1 < page.totalPages}">Следующая</span>
-			&nbsp;
-			<a th:if="${page.number + 1 < page.totalPages}" th:href="@{'/profile/page/' + ${page.totalPages}}">Конец</a>
-			<span th:unless="${page.number + 1 < page.totalPages}">Конец</span>
-		</div>
+				<a th:if="${page.number + 1 < page.totalPages}" th:href="@{'/profile/page/' + ${page.number + 1 + 1}}">Следующая</a>
+				<span th:unless="${page.number + 1 < page.totalPages}">Следующая</span>
+				&nbsp;
+				<a th:if="${page.number + 1 < page.totalPages}" th:href="@{'/profile/page/' + ${page.totalPages}}">Конец</a>
+				<span th:unless="${page.number + 1 < page.totalPages}">Конец</span>
+			</div>
+		</main>
 	</body>
 </html>

@@ -37,7 +37,9 @@ public class ServiceAdController {
 	}
 	
 	@GetMapping("/new")
-	public String showNewForm(Model model) {
+	public String showNewForm(Model model, @AuthenticationPrincipal User user) {
+		model.addAttribute("currUser", user);
+		
 		return "new/service_ad";
 	}
 	@PostMapping("/new")
@@ -59,11 +61,14 @@ public class ServiceAdController {
 	}
 	
 	@GetMapping("/{id}/update")
-	public String showUpdateForm(@PathVariable("id") long id, Model model) {
+	public String showUpdateForm(@PathVariable("id") long id, Model model,
+			@AuthenticationPrincipal User user) {
 		Ad ad = adRepo.findById(id)
 				.orElseThrow( () -> new IllegalArgumentException("Invalid user Id: " + id) );
 		
 		model.addAttribute("ad", ad);
+		model.addAttribute("currUser", user);
+		
 		return "update/service_ad";
 	}
 	

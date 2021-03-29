@@ -4,13 +4,56 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Insert title here</title>
+		<link rel="stylesheet" th:href="@{/new_update.css}" />
 	</head>
 	<body>
-		<h1>Create car ad</h1>
+		<nav>
+			<div th:if="${currUser != null}" class="userBar">
+				<img th:if="${currUser.getPhoto != null}"
+					 th:src="'data:image/png;base64,'+${imgUtil.getImgData(currUser.getPhoto.getPhoto())}" 
+					 width=60px height=45px
+					 class="userImage" />
+				<img th:if="${currUser.getPhoto == null}"
+					 th:src="@{/images/no_image.png}"
+					 width=60px height=45px
+					 class="userImage" />
+					 
+				<span class="userName" th:text="${currUser.fullname}" /> 
+				 
+				<a th:href="@{/profile}">Мои объявления</a>
+				
+				<div class="newAd">
+					<button class="newAdBtn">Разместить объявление</button>
+					
+					<div class="newAd-content">
+						<a th:href="@{/animal_ad/new}">Животные</a>
+						<a th:href="@{/apartments_ad/new}">Квартиры</a>
+						<a th:href="@{/car_ad/new}">Машины</a>
+						<a th:href="@{/garage_ad/new}">Гаражи</a>
+						<a th:href="@{/house_ad/new}">Дома</a>
+						<a th:href="@{/motorcycle_ad/new}">Мотоциклы</a>
+						<a th:href="@{/service_ad/new}">Сервисы</a>
+						<a th:href="@{/truck_and_special_machinery_ad/new}">Грузовики и спецтехника</a>
+					</div>
+				</div>
+				
+				<form method="POST" th:action="@{/logout}">
+					<input type="submit" value="Выйти"/>
+				</form>
+			</div>
+		</nav>
+		<main>
+			<div class="header">
+				<img th:src="@{/images/avito_logo.png}"
+					 	 width=110px height=30px />
+				<span>Редактирование объявления</span>
+			</div>
+			
 		<form action="#"
 			th:action="@{/car_ad/{id}/update(id=${ad.id})}"
 			th:object="${ad}"
 			th:method="POST"
+			id="adForm"
 			enctype="multipart/form-data">
 			
 			<label for="name">Имя: </label>
@@ -59,5 +102,6 @@
 			
 			<input type="submit" value="Создать"/>
 		</form>
+		</main>
 	</body>
 </html>

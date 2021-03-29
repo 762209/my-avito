@@ -14,7 +14,7 @@ public class AdSpecification{
 			return null;
 		}
 		return ((root, criteriaQuery, criteriaBuilder) -> {
-			return criteriaBuilder.equal(root.get(Ad_.name), criteria.getName());
+			return criteriaBuilder.like(root.get(Ad_.name), criteria.getName());
 		});
 	}
 	

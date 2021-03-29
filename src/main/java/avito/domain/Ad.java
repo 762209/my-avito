@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -31,6 +32,7 @@ public class Ad implements Serializable{
 	private Long id;
 	
 	private String name;
+	@Column(length = 500)
 	private String description;
 	private long price;
 	private String city;

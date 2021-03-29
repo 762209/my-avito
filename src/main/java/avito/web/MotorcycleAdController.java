@@ -42,7 +42,9 @@ public class MotorcycleAdController {
 	}
 	
 	@GetMapping("/new")
-	public String showNewForm(Model model) {
+	public String showNewForm(Model model, @AuthenticationPrincipal User user) {
+		model.addAttribute("currUser", user);
+		
 		return "/new/motorcycle_ad";
 	}
 	@PostMapping("/new")
@@ -64,11 +66,14 @@ public class MotorcycleAdController {
 	}
 	
 	@GetMapping("/{id}/update")
-	public String showUpdateForm(@PathVariable("id") long id, Model model) {
+	public String showUpdateForm(@PathVariable("id") long id, Model model,
+			@AuthenticationPrincipal User user) {
 		Ad ad = adRepo.findById(id)
 				.orElseThrow( () -> new IllegalArgumentException("Invalid user Id: " + id) );
 		
 		model.addAttribute("ad", ad);
+		model.addAttribute("currUser", user);
+		
 		return "update/motorcycle_ad";
 	}
 	

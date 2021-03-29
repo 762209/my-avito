@@ -57,7 +57,7 @@ public class HomeController {
 		Specification<Ad> spec = Specification.where(hasName(search))
 				  							  .and(hasCity(search))
 				  							  .and(hasCategory(search));
-		PageRequest pageRequest = PageRequest.of( (currentPage-1), 9, Sort.by("createdAt").descending());
+		PageRequest pageRequest = PageRequest.of( (currentPage-1), 12, Sort.by("createdAt").descending());
 		Page<Ad> page = adRepository.findAll(spec, pageRequest);
 		
 		model.addAttribute("page", page);
@@ -67,11 +67,13 @@ public class HomeController {
 		return "home";
 	}
 	@GetMapping("/show/{id}")
-	public String show(Model model, @PathVariable("id") long id) {
+	public String show(Model model, @PathVariable("id") long id,
+			 @AuthenticationPrincipal User user) {
 		Ad ad = adRepository.findById(id)
 							.get();
 		model.addAttribute("ad", ad);
 		model.addAttribute("imgUtil", new ImageUtil());
+		model.addAttribute("currUser", user);
 		
 		return "show";
 	}
