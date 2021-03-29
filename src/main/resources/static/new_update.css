@@ -1,0 +1,113 @@
+@charset "UTF-8";
+
+html, body, div, span, h1, h2, h3, h4, h5, h6, p, a, img, dl, dt, dd, 
+ol, ul, li, form, table, caption, tr, th, td, article, aside, footer, header{           
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+}
+main {
+  position: relative;
+  left: 5%;
+  right: 5%;
+  clear: both;
+  margin-top: 11.5px;
+}
+
+.userBar {
+	overflow: hidden;
+	background-color: WhiteSmoke;
+	font-family: Arial;
+	border-bottom-style: solid;
+    border-bottom-color: DarkGrey;
+    border-bottom-width: 1px;
+}
+
+.userImage {
+	float: left;
+}
+.userBar a, .userName {
+	font-family: Arial;
+	float: left;
+  	font-size: 14px;
+  	color: Silver;
+  	text-align: center;
+ 	padding: 14px 16px;
+ 	text-decoration: none;
+}
+.userBar input {
+	font-family: Arial;
+	border: none;
+	font-size: 14px;
+	background-color:  WhiteSmoke;
+	color: Silver;
+	text-align: center;
+	display: inline-block;
+	width:50px;
+	height:44px;
+}
+.newAd {
+  float: left;
+  overflow: hidden;
+}
+.newAd .newAdBtn {
+  font-family: Arial;
+  font-size: 14px; 
+  border: none;
+  outline: none;
+  color: Silver;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit; /* Important for vertical align on mobile phones */
+  margin: 0; /* Important for vertical align on mobile phones */
+}
+.userBar a:hover, .userBar input:hover, .navBarRef a:hover, .newAd:hover, .newAdBtn:hover,
+.adsTable a:hover {
+  color: red;
+}
+.newAd-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+.newAd-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+.newAd:hover .newAd-content {
+  display: block;
+}
+header {
+  	text-align: left;
+  	margin-top: 11.5px;
+}
+.header img {
+	float: left;
+	margin-bottom: 20px;
+  	margin-right: 10px;
+}
+.header span {
+	font-family: Arial;
+	float: left;
+	margin-top: 3px;
+	font-size: 25px;
+	font-weight: bold;
+}
+#adForm {
+	clear: both;
+}
+#adForm label, #adForm input {
+	margin-bottom: 5px;
+	font-family: Arial;
+}
+#adForm label{
+	font-weight: bold;
+}
