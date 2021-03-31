@@ -111,3 +111,9 @@ header {
 #adForm label{
 	font-weight: bold;
 }
+#validationInfo {
+	padding-bottom:16px;
+}
+.validationError {
+	color: red;
+}

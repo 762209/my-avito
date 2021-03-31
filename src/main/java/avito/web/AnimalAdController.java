@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,9 +44,15 @@ public class AnimalAdController {
 		return "new/animal_ad";
 	}
 	@PostMapping("/new")
-	public String saveAd(Ad adObject, @RequestParam("photoFiles")List<MultipartFile> photoFiles, 
+	public String saveAd(@ModelAttribute("adObject") @Valid Ad adObject, Errors errors, Model model,
+			@RequestParam("photoFiles")List<MultipartFile> photoFiles, 
 			@AuthenticationPrincipal User user) throws IOException {
 		
+		model.addAttribute("currUser", user);
+		
+		if (errors.hasErrors()) {
+			return "new/animal_ad";
+		}
 		for (MultipartFile photoFile : photoFiles) {
 			byte[] bytes = photoFile.getBytes();
 			Photo photo = new Photo(bytes);

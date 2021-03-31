@@ -54,21 +54,47 @@
 			      th:object="${adObject}"
 			      id="adForm"
 			      enctype="multipart/form-data">
+			      
+			    <div th:if="${#fields.hasErrors()}" id="validationInfo">
+        			<span class="validationError">
+        				Пожалуйста, заполните форму правильно.
+       	 			</span>
+      			</div>
 				
 				<label for="name">Имя: </label>
-				<input type="text" th:field="*{name}" /> </br>
+				<input type="text" th:field="*{name}" />
+				<span class="validationError"
+					  th:if="${#fields.hasErrors('name')}"
+					  th:errors="*{name}" />
+				</br>
 				
 				<label for="description">Описание: </label>
-				<input type="text" th:field="*{description}" /> </br>
+				<input type="text" th:field="*{description}" />
+				<span class="validationError"
+					  th:if="${#fields.hasErrors('description')}"
+					  th:errors="*{description}" />
+				</br>
 				
 				<label for="price">Цена: </label>
-				<input type="number" th:field="*{price}" /> </br>
+				<input type="number" th:field="*{price}" />
+				<span class="validationError"
+					  th:if="${#fields.hasErrors('price')}"
+					  th:errors="*{price}" />
+				</br>
 				
 				<label for="city">Город: </label>
-				<input type="text" th:field="*{city}" /> </br>
+				<input type="text" th:field="*{city}" />
+				<span class="validationError"
+					  th:if="${#fields.hasErrors('city')}"
+					  th:errors="*{city}" />
+				</br>
 				
 				<label for="adress">Адрес: </label>
-				<input type="text" th:field="*{adress}" /> </br>
+				<input type="text" th:field="*{adress}" />
+				<span class="validationError"
+					  th:if="${#fields.hasErrors('adress')}"
+					  th:errors="*{adress}" />
+				</br>
 				
 				<label for="photo">Фото: </label>
 				<input type="file" multiple th:name="photoFiles"  accept="image/png"/> </br>

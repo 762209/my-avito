@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +35,9 @@ public class MotorcycleAdController {
 	
 	@ModelAttribute(name = "adObject")
 	public Ad adObject() {
-		return new Ad();
+		Ad ad = new Ad();
+		ad.setTransportAd(new Transport());
+		return ad;
 	}
 	@ModelAttribute(name = "transportObject")
 	public Transport transportObject() {
@@ -48,9 +51,16 @@ public class MotorcycleAdController {
 		return "/new/motorcycle_ad";
 	}
 	@PostMapping("/new")
-	public String saveAd(Ad adObject, Transport transportObject,
+	public String saveAd(@ModelAttribute("adObject") @Valid Ad adObject, Errors adErrors, 
+//			@ModelAttribute("transportObject") @Valid Transport transportObject, Errors transportErrors, 
 			@RequestParam("photoFiles") List<MultipartFile> photoFiles,
-			@AuthenticationPrincipal User user) throws IOException {
+			@AuthenticationPrincipal User user, Model model) throws IOException {
+		
+		model.addAttribute("currUser", user);
+		
+		if (adErrors.hasErrors()) {
+			return "new/motorcycle_ad";
+		}
 		
 		for (MultipartFile photoFile : photoFiles) {
 			byte[] bytes = photoFile.getBytes();
@@ -58,7 +68,7 @@ public class MotorcycleAdController {
 			adObject.getPhotos().add(photo);
 		}
 		adObject.setAdCategory(AdCategory.MOTORCYCLE);
-		adObject.setTransportAd(transportObject);
+		//adObject.setTransportAd(transportObject);
 		adObject.setUser(user);
 		adRepo.save(adObject);
 		
