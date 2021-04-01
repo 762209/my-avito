@@ -24,16 +24,10 @@ public class Transport implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
-	
-	@NotBlank(message="Поле 'Модель' не может быть пустым")
 	private String model;
-	@NotBlank(message="Поле 'Бренд' не может быть пустым")
 	private String brand;
-	@NotBlank(message="Поле 'Цвет' не может быть пустым")
 	private String color;
-	@NotBlank(message="Поле 'Год выпуска' не может быть пустым")
 	private String manufactureYear;
-	@Digits(integer=13, fraction = 2,  message="Поле 'Пробег' должно быть числом")
 	private int mileage;
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn
@@ -41,4 +35,14 @@ public class Transport implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn
 	private TruckSpecMach truckSpecMachAd;
+	
+	public Transport() {}
+	
+	public Transport(String model, String brand, String color, String manufactureYear, int mileage) {
+		this.model = model;
+		this.brand = brand;
+		this.color = color;
+		this.manufactureYear = manufactureYear;
+		this.mileage = mileage;
+	}
 }

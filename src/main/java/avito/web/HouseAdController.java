@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,10 +21,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import avito.data.AdRepository;
 import avito.domain.Ad;
-import avito.domain.House;
 import avito.domain.Photo;
-import avito.domain.RealEstate;
 import avito.domain.User;
+import avito.forms.HouseForm;
 import avito.domain.Ad.AdCategory;
 import lombok.AllArgsConstructor;
 
@@ -33,17 +33,9 @@ import lombok.AllArgsConstructor;
 public class HouseAdController {
 	private final AdRepository adRepo;
 	
-	@ModelAttribute(name = "adObject")
-	public Ad adObject() {
-		return new Ad();
-	}
-	@ModelAttribute(name = "realEstateObject")
-	public RealEstate realEstateObject() {
-		return new RealEstate();
-	}
-	@ModelAttribute(name = "houseObject")
-	public House houseObject() {
-		return new House();
+	@ModelAttribute("adForm")
+	public HouseForm adForm() {
+		return new HouseForm();
 	}
 	
 	@GetMapping("/new")
@@ -54,21 +46,25 @@ public class HouseAdController {
 	}
 	
 	@PostMapping("/new")
-	public String saveAd(Ad adObject, RealEstate realEstateObject, House houseObject,
-			@RequestParam("photoFiles") List<MultipartFile> photoFiles,
-			@AuthenticationPrincipal User user) throws IOException {
+	public String saveAd(@ModelAttribute("adForm") @Valid HouseForm adForm,
+			Errors errors, @RequestParam("photoFiles") List<MultipartFile> photoFiles,
+			@AuthenticationPrincipal User user, Model model) throws IOException {
+		
+		model.addAttribute("currUser", user);
+		
+		if (errors.hasErrors()) {
+			return "new/house_ad";
+		}
+		
+		Ad ad = adForm.toAd();
+		ad.setUser(user);
 		
 		for (MultipartFile photoFile : photoFiles) {
 			byte[] bytes = photoFile.getBytes();
 			Photo photo = new Photo(bytes);
-			adObject.getPhotos().add(photo);
+			ad.getPhotos().add(photo);
 		}
-		
-		realEstateObject.setHouseAd(houseObject);
-		adObject.setRealEstateAd(realEstateObject);
-		adObject.setAdCategory(AdCategory.HOUSES);
-		adObject.setUser(user);
-		adRepo.save(adObject);
+		adRepo.save(ad);
 		
 		return "redirect:/house_ad/new";
 	}

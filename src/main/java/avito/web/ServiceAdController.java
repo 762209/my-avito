@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ import avito.domain.Ad;
 import avito.domain.Photo;
 import avito.domain.User;
 import avito.domain.Ad.AdCategory;
+import avito.forms.AdForm;
 import lombok.AllArgsConstructor;
 
 @Controller
@@ -31,9 +33,9 @@ import lombok.AllArgsConstructor;
 public class ServiceAdController {
 	private final AdRepository adRepo;
 	
-	@ModelAttribute(name = "adObject")
-	public Ad adObject() {
-		return new Ad();
+	@ModelAttribute(name = "adForm")
+	public AdForm adForm() {
+		return new AdForm();
 	}
 	
 	@GetMapping("/new")
@@ -43,19 +45,28 @@ public class ServiceAdController {
 		return "new/service_ad";
 	}
 	@PostMapping("/new")
-	public String saveAd(Ad adObject,@RequestParam("photoFiles")List<MultipartFile> photoFiles,
-			@AuthenticationPrincipal User user) 
+	public String saveAd(@ModelAttribute("adForm") @Valid AdForm adForm, Errors errors,
+			@RequestParam("photoFiles")List<MultipartFile> photoFiles, 
+			@AuthenticationPrincipal User user,  Model model) 
 			throws IOException {
+		
+		model.addAttribute("currUser", user);
+		
+		if (errors.hasErrors()) {
+			return "new/service_ad";
+		}
+		
+		Ad ad = adForm.toAd();
 		
 		for (MultipartFile photoFile : photoFiles) {
 			byte[] bytes = photoFile.getBytes();
 			Photo photo = new Photo(bytes);
-			adObject.getPhotos().add(photo);
+			ad.getPhotos().add(photo);
 		}
 		
-		adObject.setAdCategory(AdCategory.SERVICE);
-		adObject.setUser(user);
-		adRepo.save(adObject);
+		ad.setUser(user);
+		ad.setAdCategory(AdCategory.SERVICE);
+		adRepo.save(ad);
 		
 		return "redirect:/service_ad/new";
 	}

@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,9 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 import avito.data.AdRepository;
 import avito.domain.Ad;
 import avito.domain.Photo;
-import avito.domain.RealEstate;
 import avito.domain.User;
 import avito.domain.Ad.AdCategory;
+import avito.forms.RealEstateForm;
 import lombok.AllArgsConstructor;
 
 @Controller
@@ -32,13 +33,9 @@ import lombok.AllArgsConstructor;
 public class GarageAdController {
 	private final AdRepository adRepo;
 	
-	@ModelAttribute(name = "adObject")
-	public Ad adObject() {
-		return new Ad();
-	}
-	@ModelAttribute(name = "realEstateObject")
-	public RealEstate realEstateObject() {
-		return new RealEstate();
+	@ModelAttribute("adForm")
+	public RealEstateForm adForm() {
+		return new RealEstateForm();
 	}
 	
 	@GetMapping("/new")
@@ -49,20 +46,26 @@ public class GarageAdController {
 	}
 	
 	@PostMapping("/new")
-	public String saveAd(Ad adObject, RealEstate realEstateObject,
-			@RequestParam("photoFiles") List<MultipartFile> photoFiles,
-			@AuthenticationPrincipal User user) throws IOException {
+	public String saveAd(@ModelAttribute("adForm") @Valid RealEstateForm adForm,
+			Errors errors, @RequestParam("photoFiles") List<MultipartFile> photoFiles,
+			@AuthenticationPrincipal User user, Model model) throws IOException {
+		
+		model.addAttribute("currUser", user);
+		
+		if (errors.hasErrors()) {
+			return "new/garage_ad";
+		}
+		
+		Ad ad = adForm.toAd();
+		ad.setUser(user);
 		
 		for (MultipartFile photoFile : photoFiles) {
 			byte[] bytes = photoFile.getBytes();
 			Photo photo = new Photo(bytes);
-			adObject.getPhotos().add(photo);
+			ad.getPhotos().add(photo);
 		}
 		
-		adObject.setRealEstateAd(realEstateObject);
-		adObject.setAdCategory(AdCategory.GARAGE);
-		adObject.setUser(user);
-		adRepo.save(adObject);
+		adRepo.save(ad);
 		
 		return "redirect:/garage_ad/new";
 	}

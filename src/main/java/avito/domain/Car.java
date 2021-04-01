@@ -8,8 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import org.hibernate.annotations.NaturalId;
-
 import lombok.Data;
 
 @Entity
@@ -22,10 +20,15 @@ public class Car implements Serializable{
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
-	@NaturalId
-	private String isbn;
-	
 	private String transmission;
 	private String driveType;
 	private String enginesType;
+	
+	public Car() {}
+	
+	public Car(String transmission, String driveType, String enginesType) {
+		this.transmission = transmission;
+		this.driveType = driveType;
+		this.enginesType = enginesType;
+	}
 }

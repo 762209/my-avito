@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +26,7 @@ import avito.domain.Transport;
 import avito.domain.Ad.AdCategory;
 import avito.domain.TruckSpecMach;
 import avito.domain.User;
+import avito.forms.TruckSpecMashForm;
 import lombok.AllArgsConstructor;
 
 @Controller
@@ -33,17 +35,9 @@ import lombok.AllArgsConstructor;
 public class TruckAndSpecialMachineryAdController {
 	private final AdRepository adRepo;
 	
-	@ModelAttribute(name = "adObject")
-	public Ad adObject() {
-		return new Ad();
-	}
-	@ModelAttribute(name = "transportObject")
-	public Transport transportObject() {
-		return new Transport();
-	}
-	@ModelAttribute(name = "truckSpecMachObject")
-	public TruckSpecMach truckSpecMachObject() {
-		return new TruckSpecMach();
+	@ModelAttribute("adForm")
+	public TruckSpecMashForm adForm() {
+		return new TruckSpecMashForm();
 	}
 	
 	@GetMapping("/new")
@@ -53,20 +47,27 @@ public class TruckAndSpecialMachineryAdController {
 		return "/new/truck_and_special_machinery_ad";
 	}
 	@PostMapping("/new")
-	public String saveAd(Ad adObject, Transport transportObject, TruckSpecMach truckSpecMachObject,
-			@RequestParam("photoFiles") List<MultipartFile> photoFiles,
-			@AuthenticationPrincipal User user) throws IOException {
+	public String saveAd(@ModelAttribute("adForm") @Valid TruckSpecMashForm adForm,
+			Errors errors, @RequestParam("photoFiles") List<MultipartFile> photoFiles,
+			@AuthenticationPrincipal User user, Model model) throws IOException {
+		
+		model.addAttribute("currUser", user);
+		
+		if (errors.hasErrors()) {
+			return "new/truck_and_special_machinery_ad";
+		}
+		
+		Ad ad = adForm.toAd();
+		ad.setUser(user);
 		
 		for (MultipartFile photoFile : photoFiles) {
 			byte[] bytes = photoFile.getBytes();
 			Photo photo = new Photo(bytes);
-			adObject.getPhotos().add(photo);
+			ad.getPhotos().add(photo);
 		}
-		transportObject.setTruckSpecMachAd(truckSpecMachObject);
-		adObject.setAdCategory(AdCategory.TRUCK_AND_SPECIAL_MACHINERY);
-		adObject.setTransportAd(transportObject);
-		adObject.setUser(user);
-		adRepo.save(adObject);
+		ad.setUser(user);
+		
+		adRepo.save(ad);
 		
 		return "redirect:/truck_and_special_machinery_ad/new";
 	}

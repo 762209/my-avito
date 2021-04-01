@@ -23,6 +23,7 @@ import avito.data.AdRepository;
 import avito.domain.Ad;
 import avito.domain.Photo;
 import avito.domain.User;
+import avito.forms.AdForm;
 import avito.domain.Ad.AdCategory;
 import lombok.AllArgsConstructor;
 
@@ -32,9 +33,9 @@ import lombok.AllArgsConstructor;
 public class AnimalAdController {
 	private final AdRepository adRepo;
 	
-	@ModelAttribute(name = "adObject")
-	public Ad adObject() {
-		return new Ad();
+	@ModelAttribute(name = "adForm")
+	public AdForm adForm() {
+		return new AdForm();
 	}
 	
 	@GetMapping("/new")
@@ -44,24 +45,27 @@ public class AnimalAdController {
 		return "new/animal_ad";
 	}
 	@PostMapping("/new")
-	public String saveAd(@ModelAttribute("adObject") @Valid Ad adObject, Errors errors, Model model,
+	public String saveAd(@ModelAttribute("adForm") @Valid AdForm adForm, Errors errors,
 			@RequestParam("photoFiles")List<MultipartFile> photoFiles, 
-			@AuthenticationPrincipal User user) throws IOException {
+			@AuthenticationPrincipal User user,  Model model) throws IOException {
 		
 		model.addAttribute("currUser", user);
 		
 		if (errors.hasErrors()) {
 			return "new/animal_ad";
 		}
+		
+		Ad ad = adForm.toAd();
+		
 		for (MultipartFile photoFile : photoFiles) {
 			byte[] bytes = photoFile.getBytes();
 			Photo photo = new Photo(bytes);
-			adObject.getPhotos().add(photo);
+			ad.getPhotos().add(photo);
 		}
 		
-		adObject.setAdCategory(AdCategory.ANIMAL);
-		adObject.setUser(user);
-		adRepo.save(adObject);
+		ad.setUser(user);
+		ad.setAdCategory(AdCategory.ANIMAL);
+		adRepo.save(ad);
 		
 		return "redirect:/animal_ad/new";
 	}

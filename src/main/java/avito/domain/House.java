@@ -25,4 +25,10 @@ public class House implements Serializable{
 	
 	private int landArea;
 	private int floorLevels;
+	
+	public House() {}
+	public House(int landArea, int floorLevels) {
+		this.landArea = landArea;
+		this.floorLevels = floorLevels;
+	}
 }

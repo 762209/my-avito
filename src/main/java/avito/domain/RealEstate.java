@@ -29,4 +29,9 @@ public class RealEstate implements Serializable{
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn
 	private House houseAd;
+	
+	public RealEstate() {}
+	public RealEstate(int floorArea) {
+		this.floorArea = floorArea;
+	}
 }

@@ -18,8 +18,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotBlank;
 
 import lombok.Data;
 
@@ -33,16 +31,11 @@ public class Ad implements Serializable{
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
-	@NotBlank(message="Поле 'Имя' не может быть пустым")
 	private String name;
 	@Column(length = 500)
-	@NotBlank(message="Поле 'Описание' не может быть пустым")
 	private String description;
-	@Digits(integer=13, fraction = 2,  message="Поле 'Цена' должно быть числом")
 	private long price;
-	@NotBlank(message="Поле 'Город' не может быть пустым")
 	private String city;
-	@NotBlank(message="Поле 'Адрес' не может быть пустым")
 	private String adress;
 	private LocalDateTime createdAt;
 	
@@ -61,6 +54,15 @@ public class Ad implements Serializable{
 	private User user;
 
 	public Ad() {}
+	
+	public Ad(String name, String description, long price,
+			String city, String adress) {
+		this.name = name;
+		this.description = description;
+		this.price = price;
+		this.city = city;
+		this.adress = adress;
+	}
 	
 	public Ad(String name, String description, long price,
 			String city, String adress, AdCategory category) {

@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,10 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import avito.data.AdRepository;
 import avito.domain.Ad;
-import avito.domain.Car;
 import avito.domain.Photo;
-import avito.domain.Transport;
 import avito.domain.User;
+import avito.forms.CarForm;
 import lombok.AllArgsConstructor;
 import avito.domain.Ad.AdCategory;
 
@@ -34,17 +34,9 @@ import avito.domain.Ad.AdCategory;
 public class CarAdController {
 	private final AdRepository adRepo;
 	
-	@ModelAttribute(name = "adObject")
-	public Ad adObject() {
-		return new Ad();
-	}
-	@ModelAttribute(name = "transportObject")
-	public Transport transportObject() {
-		return new Transport();
-	}
-	@ModelAttribute(name = "carObject")
-	public Car carObject() {
-		return new Car();
+	@ModelAttribute(name = "adForm")
+	public CarForm adForm() {
+		return new CarForm();
 	}
 	
 	@GetMapping("/new")
@@ -54,21 +46,26 @@ public class CarAdController {
 		return "new/car_ad";
 	}
 	@PostMapping("/new")
-	public String processAd(Ad adObject, Transport transportObject, Car carObject,
+	public String processAd(@ModelAttribute("adForm") @Valid CarForm adForm, Errors errors,
 			@RequestParam("photoFiles") List<MultipartFile> photoFiles,
-			@AuthenticationPrincipal User user) throws IOException {
+			@AuthenticationPrincipal User user, Model model) throws IOException {
+		
+		model.addAttribute("currUser", user);
+		
+		if (errors.hasErrors()) {
+			return "new/car_ad";
+		}
+		
+		Ad ad = adForm.toAd();
+		ad.setUser(user);
 		
 		for (MultipartFile photoFile : photoFiles) {
 			byte[] bytes = photoFile.getBytes();
 			Photo photo = new Photo(bytes);
-			adObject.getPhotos().add(photo);
+			ad.getPhotos().add(photo);
 		}
 		
-		transportObject.setCarAd(carObject);
-		adObject.setAdCategory(AdCategory.CAR);
-		adObject.setTransportAd(transportObject);
-		adObject.setUser(user);
-		adRepo.save(adObject);
+		adRepo.save(ad);
 		
 		return "redirect:/car_ad/new";
 	}

@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,10 +21,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import avito.data.AdRepository;
 import avito.domain.Ad;
-import avito.domain.Apartments;
 import avito.domain.Photo;
-import avito.domain.RealEstate;
 import avito.domain.User;
+import avito.forms.ApartmentsForm;
 import avito.domain.Ad.AdCategory;
 import lombok.AllArgsConstructor;
 
@@ -33,17 +33,9 @@ import lombok.AllArgsConstructor;
 public class ApartmentsAdController {
 	private final AdRepository adRepo;
 	
-	@ModelAttribute(name = "adObject")
-	public Ad adObject() {
-		return new Ad();
-	}
-	@ModelAttribute(name = "realEstateObject")
-	public RealEstate realEstateObject() {
-		return new RealEstate();
-	}
-	@ModelAttribute(name = "apartmentsObject")
-	public Apartments apartmentsObject() {
-		return new Apartments();
+	@ModelAttribute("adForm")
+	public ApartmentsForm adForm() {
+		return new ApartmentsForm();
 	}
 	
 	@GetMapping("/new")
@@ -53,22 +45,25 @@ public class ApartmentsAdController {
 	}
 	
 	@PostMapping("/new")
-	public String processAd(Ad adObject, RealEstate realEstateObject, Apartments apartmentsObject,
-			@RequestParam("photoFiles") List<MultipartFile> photoFiles,
-			@AuthenticationPrincipal User user) throws IOException {
+	public String processAd(@ModelAttribute("adForm") @Valid ApartmentsForm adForm,
+			Errors errors, @RequestParam("photoFiles") List<MultipartFile> photoFiles,
+			@AuthenticationPrincipal User user, Model model) throws IOException {
+		
+		model.addAttribute("currUser", user);
+		
+		if (errors.hasErrors()) {
+			return "new/apartments_ad";
+		}
+		
+		Ad ad = adForm.toAd();
+		ad.setUser(user);
 		
 		for (MultipartFile photoFile : photoFiles) {
 			byte[] bytes = photoFile.getBytes();
 			Photo photo = new Photo(bytes);
-			adObject.getPhotos().add(photo);
+			ad.getPhotos().add(photo);
 		}
-		
-		
-		realEstateObject.setApartmentsAd(apartmentsObject);
-		adObject.setRealEstateAd(realEstateObject);
-		adObject.setAdCategory(AdCategory.APARTMENTS);
-		adObject.setUser(user);
-		adRepo.save(adObject);
+		adRepo.save(ad);
 		
 		return "redirect:/apartments_ad/new";
 	}
