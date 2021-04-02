@@ -13,6 +13,9 @@ import lombok.Data;
 
 @Data
 public class TruckSpecMashForm {
+	
+	private long id;
+	
 	@NotBlank(message="Поле 'Имя' не может быть пустым")
 	private String name;
 	@Column(length = 500)
@@ -47,5 +50,30 @@ public class TruckSpecMashForm {
 		ad.setTransportAd(transport);
 		
 		return ad;
+	}
+	public Ad update() {
+		Ad ad = new Ad(name, description, price, city, adress, TRUCK_AND_SPECIAL_MACHINERY);
+		Transport transport = new Transport(model, brand, color, manufactureYear, mileage);
+		TruckSpecMach truckSpecMach = new TruckSpecMach(operatingTime);
+		transport.setTruckSpecMachAd(truckSpecMach);
+		ad.setTransportAd(transport);
+		ad.setId(id);
+		return ad;
+	}
+	public void loadData(Ad ad) {
+		this.id = ad.getId();
+		this.name = ad.getName();
+		this.description = ad.getDescription();
+		this.price = ad.getPrice();
+		this.city = ad.getCity();
+		this.adress = ad.getAdress();
+		
+		this.model = ad.getTransportAd().getModel();
+		this.brand = ad.getTransportAd().getBrand();
+		this.color = ad.getTransportAd().getColor();
+		this.manufactureYear = ad.getTransportAd().getManufactureYear();
+		this.mileage = ad.getTransportAd().getMileage();
+		
+		this.operatingTime = ad.getTransportAd().getTruckSpecMachAd().getOperatingTime();
 	}
 }

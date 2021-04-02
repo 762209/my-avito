@@ -57,36 +57,36 @@
 				<label for="name">Имя: </label>
 				<input type="text" th:field="*{name}" />
 				<span class="validationError"
-				  th:if="${#fields.hasErrors('name')}"
-				  th:errors="*{name}" />
+				  	  th:if="${#fields.hasErrors('name')}"
+				  	  th:errors="*{name}" />
 				</br>
 				
 				<label for="description">Описание: </label>
 				<input type="text" th:field="*{description}" />
 				<span class="validationError"
-				  th:if="${#fields.hasErrors('description')}"
-				  th:errors="*{description}" />
+				  	  th:if="${#fields.hasErrors('description')}"
+				  	  th:errors="*{description}" />
 				</br>
 				
 				<label for="price">Цена: </label>
 				<input type="number" th:field="*{price}" />
 				<span class="validationError"
-				  th:if="${#fields.hasErrors('price')}"
-				  th:errors="*{price}" />
+				  	  th:if="${#fields.hasErrors('price')}"
+				  	  th:errors="*{price}" />
 				</br>
 				
 				<label for="city">Город: </label>
 				<input type="text" th:field="*{city}" />
 				<span class="validationError"
-				  th:if="${#fields.hasErrors('city')}"
-				  th:errors="*{city}" />
+				  	  th:if="${#fields.hasErrors('city')}"
+				  	  th:errors="*{city}" />
 				</br>
 				
 				<label for="adress">Адрес: </label>
 				<input type="text" th:field="*{adress}" />
 				<span class="validationError"
-				  th:if="${#fields.hasErrors('adress')}"
-				  th:errors="*{adress}" />
+				  	  th:if="${#fields.hasErrors('adress')}"
+				  	  th:errors="*{adress}" />
 				</br>
 				
 				<label for="photo">Фото: </label>
@@ -96,22 +96,22 @@
 				<label for="floorArea">Площадь: </label>
 				<input type="number" th:field="*{floorArea}" />
 				<span class="validationError"
-				  th:if="${#fields.hasErrors('floorArea')}"
-				  th:errors="*{floorArea}" />
+				  	  th:if="${#fields.hasErrors('floorArea')}"
+				  	  th:errors="*{floorArea}" />
 				</br>
 				
 				<label for="roomsNumber">Колличество комнат: </label>
 				<input type="number" th:field="*{roomsNumber}" />
 				<span class="validationError"
-				  th:if="${#fields.hasErrors('roomsNumber')}"
-				  th:errors="*{roomsNumber}" />
+				  	  th:if="${#fields.hasErrors('roomsNumber')}"
+				  	  th:errors="*{roomsNumber}" />
 				</br>
 				
 				<label for="floorLevel">Этаж: </label>
 				<input type="number" th:field="*{floorLevel}" />
 				<span class="validationError"
-				  th:if="${#fields.hasErrors('floorLevel')}"
-				  th:errors="*{floorLevel}" />
+				  	  th:if="${#fields.hasErrors('floorLevel')}"
+				  	  th:errors="*{floorLevel}" />
 				</br>
 				
 				<input type="submit" value="Создать"/>

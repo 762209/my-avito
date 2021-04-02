@@ -50,48 +50,92 @@
 			</div>
 			
 		<form action="#"
-			th:action="@{/truck_and_special_machinery_ad/{id}/update(id=${ad.id})}"
-			th:object="${ad}"
+			th:action="@{/truck_and_special_machinery_ad/{id}/update(id=${adForm.id})}"
+			th:object="${adForm}"
 			th:method="POST"
 			id="adForm"
 			enctype="multipart/form-data">
 			
 			<label for="name">Имя: </label>
-			<input type="text" th:field="*{name}" /> </br>
+			<input type="text" th:field="*{name}" />
+			<span class="validationError"
+				  th:if="${#fields.hasErrors('name')}"
+				  th:errors="*{name}" />
+			</br>
 			
 			<label for="description">Описание: </label>
-			<input type="text" th:field="*{description}" /> </br>
+			<input type="text" th:field="*{description}" />
+			<span class="validationError"
+				  th:if="${#fields.hasErrors('description')}"
+				  th:errors="*{description}" />
+			</br>
 			
 			<label for="price">Цена: </label>
-			<input type="number" th:field="*{price}" /> </br>
+			<input type="number" th:field="*{price}" />
+			<span class="validationError"
+				  th:if="${#fields.hasErrors('price')}"
+				  th:errors="*{price}" />
+			</br>
 			
 			<label for="city">Город: </label>
-			<input type="text" th:field="*{city}" /> </br>
+			<input type="text" th:field="*{city}" />
+			<span class="validationError"
+				  th:if="${#fields.hasErrors('city')}"
+				  th:errors="*{city}" />
+			</br>
 			
 			<label for="adress">Адрес: </label>
-			<input type="text" th:field="*{adress}" /> </br>
+			<input type="text" th:field="*{adress}" />
+			<span class="validationError"
+				  th:if="${#fields.hasErrors('adress')}"
+				  th:errors="*{adress}" />
+			</br>
 			
 			<label for="photo">Фото: </label>
 			<input type="file" multiple th:name="photoFiles"  accept="image/png"/> </br>	
 			
 			
 			<label for="model">Модель: </label>
-			<input type="text" th:field="*{transportAd.model}" /> </br>
+			<input type="text" th:field="*{model}" />
+			<span class="validationError"
+				  th:if="${#fields.hasErrors('model')}"
+				  th:errors="*{model}" />
+			</br>
 			
 			<label for="brand">Бренд: </label>
-			<input type="text" th:field="*{transportAd.brand}" /> </br>
+			<input type="text" th:field="*{brand}" />
+			<span class="validationError"
+				  th:if="${#fields.hasErrors('brand')}"
+				  th:errors="*{brand}" />
+			</br>
 			
 			<label for="color">Цвет: </label>
-			<input type="text" th:field="*{transportAd.color}" /> </br>
+			<input type="text" th:field="*{color}" />
+			<span class="validationError"
+				  th:if="${#fields.hasErrors('color')}"
+				  th:errors="*{color}" />
+			</br>
 			
 			<label for="manufactureYear">Год выпуска: </label>
-			<input type="text" th:field="*{transportAd.manufactureYear}" /> </br>
+			<input type="text" th:field="*{manufactureYear}" />
+			<span class="validationError"
+				  th:if="${#fields.hasErrors('manufactureYear')}"
+				  th:errors="*{manufactureYear}" />
+			</br>
 			
 			<label for="mileage">Пробег: </label>
-			<input type="number" th:field="*{transportAd.mileage}" /> </br>
+			<input type="number" th:field="*{mileage}" />
+			<span class="validationError"
+				  th:if="${#fields.hasErrors('mileage')}"
+				  th:errors="*{mileage}" />
+			</br>
 			
-			<label for="operatingTime">Коробка передач: </label>
-			<input type="number" th:field="*{transportAd.truckSpecMachAd.operatingTime}" /> </br>
+			<label for="operatingTime">Наработка: </label>
+			<input type="number" th:field="*{operatingTime}" />
+			<span class="validationError"
+				  th:if="${#fields.hasErrors('operatingTime')}"
+				  th:errors="*{operatingTime}" />
+			</br>
 			
 			
 			<input type="submit" value="Обновить"/>

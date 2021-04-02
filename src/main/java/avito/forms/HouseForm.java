@@ -17,6 +17,9 @@ import lombok.Data;
 
 @Data
 public class HouseForm {
+	
+	private long id;
+	
 	@NotBlank(message="Поле 'Имя' не может быть пустым")
 	private String name;
 	@Column(length = 500)
@@ -47,5 +50,27 @@ public class HouseForm {
 		ad.setRealEstateAd(realEstate);
 		
 		return ad;
+	}
+	
+	public Ad update() {
+		Ad ad = new Ad(name, description, price, city, adress, HOUSES);
+		RealEstate realEstate = new RealEstate(floorArea);
+		House house = new House(landArea, floorLevels);
+		realEstate.setHouseAd(house);;
+		ad.setRealEstateAd(realEstate);
+		ad.setId(id);
+		
+		return ad;
+	}
+	public void loadData(Ad ad) {
+		this.id = ad.getId();
+		this.name = ad.getName();
+		this.description = ad.getDescription();
+		this.price = ad.getPrice();
+		this.city = ad.getCity();
+		this.adress = ad.getAdress();
+		this.floorArea = ad.getRealEstateAd().getFloorArea();
+		this.landArea = ad.getRealEstateAd().getHouseAd().getLandArea();
+		this.floorLevels = ad.getRealEstateAd().getHouseAd().getFloorLevels();
 	}
 }

@@ -17,6 +17,8 @@ import lombok.Data;
 @Data
 public class RealEstateForm {
 	
+	private long id;
+	
 	@NotBlank(message="Поле 'Имя' не может быть пустым")
 	private String name;
 	@Column(length = 500)
@@ -39,5 +41,23 @@ public class RealEstateForm {
 		RealEstate realEstate = new RealEstate(floorArea);
 		ad.setRealEstateAd(realEstate);
 		return ad;
+	}
+	
+	public Ad update() {
+		Ad ad = new Ad(name, description, price, city, adress, GARAGE);
+		RealEstate realEstate = new RealEstate(floorArea);
+		ad.setRealEstateAd(realEstate);
+		ad.setId(id);
+		return ad;
+	}
+	public void loadData(Ad ad) {
+		this.id = ad.getId();
+		this.name = ad.getName();
+		this.description = ad.getDescription();
+		this.price = ad.getPrice();
+		this.city = ad.getCity();
+		this.adress = ad.getAdress();
+		
+		this.floorArea = ad.getRealEstateAd().getFloorArea();
 	}
 }

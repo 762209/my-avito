@@ -9,7 +9,6 @@ import javax.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -22,9 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import avito.data.AdRepository;
 import avito.domain.Ad;
 import avito.domain.Photo;
-import avito.domain.Transport;
-import avito.domain.Ad.AdCategory;
-import avito.domain.TruckSpecMach;
 import avito.domain.User;
 import avito.forms.TruckSpecMashForm;
 import lombok.AllArgsConstructor;
@@ -65,7 +61,6 @@ public class TruckAndSpecialMachineryAdController {
 			Photo photo = new Photo(bytes);
 			ad.getPhotos().add(photo);
 		}
-		ad.setUser(user);
 		
 		adRepo.save(ad);
 		
@@ -74,29 +69,33 @@ public class TruckAndSpecialMachineryAdController {
 	
 	@GetMapping("/{id}/update")
 	public String showUpdateForm(@PathVariable("id") long id, Model model,
-			@AuthenticationPrincipal User user) {
+			@AuthenticationPrincipal User user, TruckSpecMashForm adForm) {
 		Ad ad = adRepo.findById(id)
 				.orElseThrow( () -> new IllegalArgumentException("Invalid user Id: " + id) );
 		
-		model.addAttribute("ad", ad);
+		adForm.loadData(ad);
+		model.addAttribute("adForm", adForm);
 		model.addAttribute("currUser", user);
 		
 		return "update/truck_and_special_machinery_ad";
 	}
 	@PostMapping("/{id}/update")
-	public String updateAd(@PathVariable("id") long id, @Valid Ad ad,
-			BindingResult result, Model model, @AuthenticationPrincipal User user,
+	public String updateAd(@PathVariable("id") long id, @ModelAttribute("adForm") @Valid TruckSpecMashForm adForm,
+			Errors errors, Model model, @AuthenticationPrincipal User user,
 			@RequestParam("photoFiles")List<MultipartFile> photoFiles) throws IOException{
-		if (result.hasErrors()) {
-			ad.setId(id);
+		if (errors.hasErrors()) {
+			adForm.setId(id);
 			return "update/truck_and_special_machinery_ad";
 		}
+		
+		Ad ad = adForm.update();
+		
 		for (MultipartFile photoFile : photoFiles) {
 			byte[] bytes = photoFile.getBytes();
 			Photo photo = new Photo(bytes);
 			ad.getPhotos().add(photo);
 		}
-		ad.setAdCategory(AdCategory.TRUCK_AND_SPECIAL_MACHINERY);
+		
 		ad.setCreatedAt(LocalDateTime.now());
 		ad.setUser(user);
 		adRepo.save(ad);
