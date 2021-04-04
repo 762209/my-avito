@@ -25,16 +25,22 @@ import avito.domain.Photo;
 import avito.domain.User;
 import avito.forms.CarForm;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/car_ad")
 @AllArgsConstructor
+@Slf4j
 public class CarAdController {
 	private final AdRepository adRepo;
 	
 	@ModelAttribute(name = "adForm")
 	public CarForm adForm() {
 		return new CarForm();
+	}
+	@ModelAttribute(name = "imgUtil")
+	public ImageUtil imgUtil() {
+		return new ImageUtil();
 	}
 	
 	@GetMapping("/new")
@@ -46,7 +52,7 @@ public class CarAdController {
 	@PostMapping("/new")
 	public String processAd(@ModelAttribute("adForm") @Valid CarForm adForm, Errors errors,
 			@RequestParam("photoFiles") List<MultipartFile> photoFiles,
-			@AuthenticationPrincipal User user, Model model) throws IOException {
+			@AuthenticationPrincipal User user, Model model) {
 		
 		model.addAttribute("currUser", user);
 		
@@ -57,12 +63,15 @@ public class CarAdController {
 		Ad ad = adForm.toAd();
 		ad.setUser(user);
 		
-		for (MultipartFile photoFile : photoFiles) {
-			byte[] bytes = photoFile.getBytes();
-			Photo photo = new Photo(bytes);
-			ad.getPhotos().add(photo);
+		try {
+			for (MultipartFile photoFile : photoFiles) {
+				byte[] bytes = photoFile.getBytes();
+				Photo photo = new Photo(bytes);
+				ad.getPhotos().add(photo);
+			}
+		} catch (IOException e) {
+			log.warn(e.getMessage());
 		}
-		
 		adRepo.save(ad);
 		
 		return "redirect:/car_ad/new";
@@ -72,7 +81,10 @@ public class CarAdController {
 	public String showUpdateForm(@PathVariable("id") long id, Model model,
 			@AuthenticationPrincipal User user, CarForm adForm) {
 		Ad ad = adRepo.findById(id)
-				.orElseThrow( () -> new IllegalArgumentException("Invalid user Id: " + id) );
+				.orElseThrow( () -> {
+					log.error("Invalid user Id: " + id);
+					throw new IllegalArgumentException("Invalid user Id: " + id);
+				});
 		
 		adForm.loadData(ad);
 		model.addAttribute("adForm", adForm);
@@ -84,7 +96,7 @@ public class CarAdController {
 	@PostMapping("/{id}/update")
 	public String updateAd(@PathVariable("id") long id, @ModelAttribute("adForm") @Valid CarForm adForm,
 			Errors errors, Model model, @AuthenticationPrincipal User user,
-			@RequestParam("photoFiles")List<MultipartFile> photoFiles) throws IOException{
+			@RequestParam("photoFiles")List<MultipartFile> photoFiles) {
 		
 		model.addAttribute("currUser", user);
 		
@@ -94,15 +106,19 @@ public class CarAdController {
 		}
 		
 		Ad ad = adForm.update();
-		
-		for (MultipartFile photoFile : photoFiles) {
-			byte[] bytes = photoFile.getBytes();
-			Photo photo = new Photo(bytes);
-			ad.getPhotos().add(photo);
+		try {
+			for (MultipartFile photoFile : photoFiles) {
+				byte[] bytes = photoFile.getBytes();
+				Photo photo = new Photo(bytes);
+				ad.getPhotos().add(photo);
+			}
+		} catch (IOException e) {
+			log.warn(e.getMessage());
 		}
 		ad.setCreatedAt(LocalDateTime.now());
 		ad.setUser(user);
 		adRepo.save(ad);
+		
 		return "redirect:/profile";
 	}
 }

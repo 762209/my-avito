@@ -42,6 +42,7 @@
 				</form>
 			</div>
 			<div th:if="${currUser == null}" class="userBar">
+				<a th:href="@{/login}">Авторизуйстесь</a>
 				<a th:href="@{/register}">Зарегистриуйтесь</a>
 			</div>
 		</nav>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+		<link rel="stylesheet" th:href="@{/show.css}" />
+	</head>
+	<body>
+		<nav>
+			<div th:if="${currUser != null}" class="userBar">
+				<img th:if="${currUser.getPhoto != null}"
+					 th:src="'data:image/png;base64,'+${imgUtil.getImgData(currUser.getPhoto.getPhoto())}" 
+					 width=60px height=45px
+					 class="userImage" />
+				<img th:if="${currUser.getPhoto == null}"
+					 th:src="@{/images/no_image.png}"
+					 width=60px height=45px
+					 class="userImage" />
+					 
+				<span class="userName" th:text="${currUser.fullname}" /> 
+				 
+				<a th:href="@{/profile}">Мои объявления</a>
+				
+				<div class="newAd">
+					<button class="newAdBtn">Разместить объявление</button>
+					
+					<div class="newAd-content">
+						<a th:href="@{/animal_ad/new}">Животные</a>
+						<a th:href="@{/apartments_ad/new}">Квартиры</a>
+						<a th:href="@{/car_ad/new}">Машины</a>
+						<a th:href="@{/garage_ad/new}">Гаражи</a>
+						<a th:href="@{/house_ad/new}">Дома</a>
+						<a th:href="@{/motorcycle_ad/new}">Мотоциклы</a>
+						<a th:href="@{/service_ad/new}">Сервисы</a>
+						<a th:href="@{/truck_and_special_machinery_ad/new}">Грузовики и спецтехника</a>
+					</div>
+				</div>
+				
+				<form method="POST" th:action="@{/logout}">
+					<input type="submit" value="Выйти"/>
+				</form>
+			</div>
+			<div th:if="${currUser == null}" class="userBar">
+				<a th:href="@{/register}">Зарегистриуйтесь</a>
+			</div>
+		</nav>
+		<main>
+			<div class="header">
+				<img th:src="@{/images/avito_logo.png}"
+					 	 width=110px height=30px />
+				<div class="namePrice">
+					<span id="name" th:text="${ad.name}" />
+					<span id="price" th:text="${#numbers.formatCurrency(ad.price)}" />
+				</div>
+			</div>
+			<img th:if="${ad.getPhotos.size() == 0}"
+				 th:src="@{/images/no_image.png}"
+				 width=100px height=70px /> </br>
+				 
+			<div th:if="${ad.getPhotos.size() > 0}" class="photos">
+				<img th:src="'data:image/png;base64,'+${imgUtil.getImgData(ad.getPhotos.get(0).getPhoto())}"
+				 	 th:id="mainPhoto"
+				 	 width=406px height=280px />
+				 <div class="secondPhotos">
+					<img th:each="photo : ${ad.getPhotos}" 
+						 th:src="'data:image/png;base64,'+${imgUtil.getImgData(photo.getPhoto())}"
+						 class="photo"
+						 width=100px height=70px />
+				 </div>
+			</div>
+			<div class="description">
+				<div class="textBlock" th:text="${ad.description}" /></br>
+				<div th:if="${ad.adCategory == T(avito.domain.Ad$AdCategory).CAR or
+							  ad.adCategory == T(avito.domain.Ad$AdCategory).MOTORCYCLE or
+							  ad.adCategory == T(avito.domain.Ad$AdCategory).TRUCK_AND_SPECIAL_MACHINERY}">
+							  
+					<span class="label">Модель:</span>
+					<span class="text" th:text="${ad.transportAd.model}" /> </br>
+					
+					<span class="label">Марка:</span>
+					<span class="text" th:text="${ad.transportAd.brand}" /> </br>
+					
+					<span class="label">Цвет:</span>
+					<span class="text" th:text="${ad.transportAd.color}" /> </br>
+					
+					<span class="label">Год выпуска:</span>
+					<span class="text" th:text="${ad.transportAd.manufactureYear}" /> </br>
+					
+					<span class="label">Пробег:</span>
+					<span class="text" th:text="${ad.transportAd.mileage}" /> </br>
+					
+					<div th:if="${ad.adCategory == T(avito.domain.Ad$AdCategory).CAR}">
+						<span class="label">Коробка передач:</span>
+						<span class="text" th:text="${ad.transportAd.carAd.transmission}"></span> </br>
+						
+						<span class="label">Привод:</span>
+						<span class="text" th:text="${ad.transportAd.carAd.driveType}" /> </br>
+						
+						<span class="label">Тип двигателя:</span>
+						<span class="text" th:text="${ad.transportAd.carAd.enginesType}" /> </br>
+					</div>
+					<div th:if="${ad.adCategory == T(avito.domain.Ad$AdCategory).TRUCK_AND_SPECIAL_MACHINERY}">
+						<span class="label">Наработка:</span>
+						<span class="text" th:text="${ad.transportAd.truckSpecMachAd.operatingTime}" /> </br>
+					</div>
+				</div>
+				<div th:if="${ad.adCategory == T(avito.domain.Ad$AdCategory).APARTMENTS or
+							  ad.adCategory == T(avito.domain.Ad$AdCategory).HOUSES or
+							  ad.adCategory == T(avito.domain.Ad$AdCategory).GARAGE}">
+					<span class="label">Площадь:</span>
+					<span class="text" th:text="${ad.realEstateAd.floorArea}" /> </br>
+					
+					<div th:if="${ad.adCategory == T(avito.domain.Ad$AdCategory).APARTMENTS} ">
+						<span class="label">Количество комнат:</span>
+						<span class="text" th:text="${ad.realEstateAd.apartmentsAd.roomsNumber}" /> </br>
+						
+						<span class="label">Этаж:</span>
+						<span class="text" th:text="${ad.realEstateAd.apartmentsAd.floorLevel}" /> </br>
+					</div>
+					<div th:if="${ad.adCategory == T(avito.domain.Ad$AdCategory).HOUSES} ">
+						<span class="label">Номер квартиры:</span>
+						<span class="text" th:text="${ad.realEstateAd.houseAd.landArea}" /> </br>
+						
+						<span class="label">Количество этажей:</span>
+						<span class="text" th:text="${ad.realEstateAd.houseAd.floorLevels}" /> </br>
+					</div>
+				</div>
+			</div>
+		</main>
+	</body>
+	<script>
+		let mainPhoto = document.getElementById("mainPhoto");
+		let photos = document.getElementsByClassName("photo");
+		
+		for (let i = 0; i < photos.length; i++) {
+			let currImage = photos[i];
+			currImage.onmouseover = function() {
+				mainPhoto.src = currImage.src;
+			}
+		}
+	</script>
+</html>

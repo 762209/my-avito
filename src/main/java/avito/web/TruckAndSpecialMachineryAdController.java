@@ -24,16 +24,22 @@ import avito.domain.Photo;
 import avito.domain.User;
 import avito.forms.TruckSpecMashForm;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/truck_and_special_machinery_ad")
 @AllArgsConstructor
+@Slf4j
 public class TruckAndSpecialMachineryAdController {
 	private final AdRepository adRepo;
 	
 	@ModelAttribute("adForm")
 	public TruckSpecMashForm adForm() {
 		return new TruckSpecMashForm();
+	}
+	@ModelAttribute(name = "imgUtil")
+	public ImageUtil imgUtil() {
+		return new ImageUtil();
 	}
 	
 	@GetMapping("/new")
@@ -45,7 +51,7 @@ public class TruckAndSpecialMachineryAdController {
 	@PostMapping("/new")
 	public String saveAd(@ModelAttribute("adForm") @Valid TruckSpecMashForm adForm,
 			Errors errors, @RequestParam("photoFiles") List<MultipartFile> photoFiles,
-			@AuthenticationPrincipal User user, Model model) throws IOException {
+			@AuthenticationPrincipal User user, Model model) {
 		
 		model.addAttribute("currUser", user);
 		
@@ -56,10 +62,14 @@ public class TruckAndSpecialMachineryAdController {
 		Ad ad = adForm.toAd();
 		ad.setUser(user);
 		
-		for (MultipartFile photoFile : photoFiles) {
-			byte[] bytes = photoFile.getBytes();
-			Photo photo = new Photo(bytes);
-			ad.getPhotos().add(photo);
+		try {
+			for (MultipartFile photoFile : photoFiles) {
+				byte[] bytes = photoFile.getBytes();
+				Photo photo = new Photo(bytes);
+				ad.getPhotos().add(photo);
+			}
+		} catch (IOException e) {
+			log.warn(e.getMessage());
 		}
 		
 		adRepo.save(ad);
@@ -71,7 +81,10 @@ public class TruckAndSpecialMachineryAdController {
 	public String showUpdateForm(@PathVariable("id") long id, Model model,
 			@AuthenticationPrincipal User user, TruckSpecMashForm adForm) {
 		Ad ad = adRepo.findById(id)
-				.orElseThrow( () -> new IllegalArgumentException("Invalid user Id: " + id) );
+				.orElseThrow( () -> {
+					log.error("Invalid user Id: " + id);
+					throw new IllegalArgumentException("Invalid user Id: " + id);
+				});
 		
 		adForm.loadData(ad);
 		model.addAttribute("adForm", adForm);
@@ -82,23 +95,27 @@ public class TruckAndSpecialMachineryAdController {
 	@PostMapping("/{id}/update")
 	public String updateAd(@PathVariable("id") long id, @ModelAttribute("adForm") @Valid TruckSpecMashForm adForm,
 			Errors errors, Model model, @AuthenticationPrincipal User user,
-			@RequestParam("photoFiles")List<MultipartFile> photoFiles) throws IOException{
+			@RequestParam("photoFiles")List<MultipartFile> photoFiles) {
 		if (errors.hasErrors()) {
 			adForm.setId(id);
 			return "update/truck_and_special_machinery_ad";
 		}
 		
 		Ad ad = adForm.update();
-		
-		for (MultipartFile photoFile : photoFiles) {
-			byte[] bytes = photoFile.getBytes();
-			Photo photo = new Photo(bytes);
-			ad.getPhotos().add(photo);
+		try {
+			for (MultipartFile photoFile : photoFiles) {
+				byte[] bytes = photoFile.getBytes();
+				Photo photo = new Photo(bytes);
+				ad.getPhotos().add(photo);
+			}
+		} catch (IOException e) {
+			log.warn(e.getMessage());
 		}
 		
 		ad.setCreatedAt(LocalDateTime.now());
 		ad.setUser(user);
 		adRepo.save(ad);
+		
 		return "redirect:/profile";
 	}
 }

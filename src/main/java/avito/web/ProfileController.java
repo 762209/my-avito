@@ -47,6 +47,10 @@ public class ProfileController {
 		ad.getRealEstateAd().setHouseAd(new House());
 		return ad;
 	}
+	@ModelAttribute(name = "imgUtil")
+	public ImageUtil imgUtil() {
+		return new ImageUtil();
+	}
 	
 	@GetMapping()
 	public String search(@ModelAttribute Ad search, Model model, @AuthenticationPrincipal User user) {
@@ -64,7 +68,6 @@ public class ProfileController {
 		Page<Ad> page = adRepo.findAll(spec, pageRequest);
 		
 		model.addAttribute("page", page);
-		model.addAttribute("imgUtil", new ImageUtil());
 		model.addAttribute("currUser", user);
 		
 		return "profile";

@@ -45,6 +45,10 @@ public class HomeController {
 		ad.getRealEstateAd().setHouseAd(new House());
 		return ad;
 	}
+	@ModelAttribute(name = "imgUtil")
+	public ImageUtil imgUtil() {
+		return new ImageUtil();
+	}
 	
 	@GetMapping
 	public String search(@ModelAttribute Ad search, Model model, @AuthenticationPrincipal User user) {
@@ -61,7 +65,6 @@ public class HomeController {
 		Page<Ad> page = adRepository.findAll(spec, pageRequest);
 		
 		model.addAttribute("page", page);
-		model.addAttribute("imgUtil", new ImageUtil());
 		model.addAttribute("currUser", user);
 		
 		return "home";
@@ -72,7 +75,6 @@ public class HomeController {
 		Ad ad = adRepository.findById(id)
 							.get();
 		model.addAttribute("ad", ad);
-		model.addAttribute("imgUtil", new ImageUtil());
 		model.addAttribute("currUser", user);
 		
 		return "show";

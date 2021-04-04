@@ -18,9 +18,11 @@ import avito.domain.RealEstate;
 import avito.domain.Transport;
 import avito.domain.TruckSpecMach;
 import avito.domain.User;
+import lombok.extern.slf4j.Slf4j;
 import avito.domain.Ad.AdCategory;
 
 @Component
+@Slf4j
 public class DataFiller {
 	@Autowired
 	private UserRepository userRepo;
@@ -160,7 +162,6 @@ public class DataFiller {
 		serviceAd.setUser(user1);
 		adRepo.save(serviceAd);
 		
-		
-		
+		log.info("Fill with test data");
 	}
 }

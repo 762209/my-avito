@@ -33,15 +33,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-			.formLogin()
-				.loginPage("/login")
+			.authorizeRequests()
+				.antMatchers("/profile/**",
+							"/animal_ad/**", "/apartments_ad/**", "/car_ad/**", "/garage_ad/**",
+							 "/house_ad/**", "/motorcycle_ad/**", "/service_ad/**",
+							 "/truck_and_special_machinery/**")
+					.hasRole("USER")
+				.antMatchers("/home**", "/**" ).permitAll()
+			.and()
+				.formLogin()
+					.loginPage("/login")
+					.defaultSuccessUrl("/home")
 			.and()
 				.logout()
-				.logoutSuccessUrl("/home")
-			.and()
-				.csrf()
-					.ignoringAntMatchers("/h2-console/**");
+				.logoutSuccessUrl("/home");
 			
+//				.csrf()
+//					.ignoringAntMatchers("/h2-console/**");
 				
 	}
 	
