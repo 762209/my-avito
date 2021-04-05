@@ -9,11 +9,11 @@
 	<body>
 		<nav>
 			<div th:if="${currUser != null}" class="userBar">
-				<img th:if="${currUser.getPhoto != null}"
+				<img th:if="${currUser.getPhoto != null and currUser.getPhoto.getPhoto.length != 0}"
 					 th:src="'data:image/png;base64,'+${imgUtil.getImgData(currUser.getPhoto.getPhoto())}" 
 					 width=60px height=45px
 					 class="userImage" />
-				<img th:if="${currUser.getPhoto == null}"
+				<img th:if="${currUser.getPhoto == null or currUser.getPhoto.getPhoto.length == 0}"
 					 th:src="@{/images/no_image.png}"
 					 width=60px height=45px
 					 class="userImage" />
@@ -70,10 +70,10 @@
 			</form>
 			<div class="adsTable">
 				<div th:each="ad : ${page}" class="addItem">
-					<img th:if="${ad.getPhotos.size() > 0}"
+					<img th:if="${ad.getPhotos.size() > 0 and ad.getPhotos.get(0).getPhoto().length != 0}"
 						 th:src="'data:image/png;base64,'+${imgUtil.getImgData(ad.getPhotos.get(0).getPhoto())}" 
 						 width=300px height=210px/>
-					<img th:if="${ad.getPhotos.size() == 0}"
+					<img th:if="${ad.getPhotos.size() == 0 or ad.getPhotos.get(0).getPhoto().length == 0}"
 						 th:src="@{/images/no_image.png}"
 						 width=300px height=210px/> </br>
 					<a th:href="@{'/home/show/' + ${ad.id}}">[[${ad.name}]]</a> </br>

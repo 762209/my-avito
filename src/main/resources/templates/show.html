@@ -9,11 +9,11 @@
 	<body>
 		<nav>
 			<div th:if="${currUser != null}" class="userBar">
-				<img th:if="${currUser.getPhoto != null}"
+				<img th:if="${currUser.getPhoto != null and currUser.getPhoto.getPhoto.length != 0}"
 					 th:src="'data:image/png;base64,'+${imgUtil.getImgData(currUser.getPhoto.getPhoto())}" 
 					 width=60px height=45px
 					 class="userImage" />
-				<img th:if="${currUser.getPhoto == null}"
+				<img th:if="${currUser.getPhoto == null or currUser.getPhoto.getPhoto.length == 0}"
 					 th:src="@{/images/no_image.png}"
 					 width=60px height=45px
 					 class="userImage" />
@@ -54,11 +54,11 @@
 					<span id="price" th:text="${#numbers.formatCurrency(ad.price)}" />
 				</div>
 			</div>
-			<img th:if="${ad.getPhotos.size() == 0}"
+			<img th:if="${ad.getPhotos.size() == 0 or ad.getPhotos.get(0).getPhoto().length == 0}"
 				 th:src="@{/images/no_image.png}"
-				 width=100px height=70px /> </br>
+				 width=406px height=280px /> </br>
 				 
-			<div th:if="${ad.getPhotos.size() > 0}" class="photos">
+			<div th:if="${ad.getPhotos.size() > 0 and ad.getPhotos.get(0).getPhoto().length != 0}" class="photos">
 				<img th:src="'data:image/png;base64,'+${imgUtil.getImgData(ad.getPhotos.get(0).getPhoto())}"
 				 	 th:id="mainPhoto"
 				 	 width=406px height=280px />

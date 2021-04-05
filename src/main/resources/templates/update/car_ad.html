@@ -9,13 +9,13 @@
 	<body>
 		<nav>
 			<div th:if="${currUser != null}" class="userBar">
-				<img th:if="${currUser.getPhoto != null}"
+				<img th:if="${currUser.getPhoto != null and currUser.getPhoto.getPhoto.length != 0}"
 					 th:src="'data:image/png;base64,'+${imgUtil.getImgData(currUser.getPhoto.getPhoto())}" 
-					 width=60px height=45px
+					 width="60px" height="45px"
 					 class="userImage" />
-				<img th:if="${currUser.getPhoto == null}"
+				<img th:if="${currUser.getPhoto == null or currUser.getPhoto.getPhoto.length == 0}"
 					 th:src="@{/images/no_image.png}"
-					 width=60px height=45px
+					 width="60px" height="45px"
 					 class="userImage" />
 					 
 				<span class="userName" th:text="${currUser.fullname}" /> 

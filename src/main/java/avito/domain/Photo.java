@@ -22,8 +22,8 @@ public class Photo implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
-	
-//	@Lob Dont work with PostgreSQL
+//  Dont work with PostgreSQL	
+//	@Lob 
 	private byte[] photo;
 	
 	public Photo(byte[] photo) {
