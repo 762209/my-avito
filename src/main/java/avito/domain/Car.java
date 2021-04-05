@@ -14,9 +14,6 @@ import lombok.Data;
 @Data
 public class Car implements Serializable{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7110344880084091095L;
 
 	@Id
@@ -26,4 +23,12 @@ public class Car implements Serializable{
 	private String transmission;
 	private String driveType;
 	private String enginesType;
+	
+	public Car() {}
+	
+	public Car(String transmission, String driveType, String enginesType) {
+		this.transmission = transmission;
+		this.driveType = driveType;
+		this.enginesType = enginesType;
+	}
 }

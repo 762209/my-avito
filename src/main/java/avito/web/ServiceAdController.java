@@ -1,54 +1,129 @@
 package avito.web;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.validation.Valid;
+
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import avito.data.AdRepository;
-import avito.data.PhotoRepository;
 import avito.domain.Ad;
 import avito.domain.Photo;
+import avito.domain.User;
 import avito.domain.Ad.AdCategory;
+import avito.forms.AdForm;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
-@RequestMapping("/new/service_ad")
+@RequestMapping("/service_ad")
 @AllArgsConstructor
+@Slf4j
 public class ServiceAdController {
 	private final AdRepository adRepo;
-	private final PhotoRepository photoRepo;
 	
-	@ModelAttribute(name = "adObject")
-	public Ad adObject() {
-		return new Ad();
+	@ModelAttribute(name = "adForm")
+	public AdForm adForm() {
+		return new AdForm();
+	}
+	@ModelAttribute(name = "imgUtil")
+	public ImageUtil imgUtil() {
+		return new ImageUtil();
 	}
 	
-	@GetMapping()
-	public String showAdForm(Model model) {
+	@GetMapping("/new")
+	public String showNewForm(Model model, @AuthenticationPrincipal User user) {
+		model.addAttribute("currUser", user);
+		
 		return "new/service_ad";
 	}
-	@PostMapping()
-	public String processAd(Ad adObject,@RequestParam("photoFiles")List<MultipartFile> photoFiles) 
-			throws IOException {
+	@PostMapping("/new")
+	public String saveAd(@ModelAttribute("adForm") @Valid AdForm adForm, Errors errors,
+			@RequestParam("photoFiles")List<MultipartFile> photoFiles, 
+			@AuthenticationPrincipal User user,  Model model) {
 		
-		for (MultipartFile photoFile : photoFiles) {
-			byte[] bytes = photoFile.getBytes();
-			Photo photoEntity = photoRepo.save(new Photo(bytes));
-			adObject.getPhotos().add(photoEntity);
+		model.addAttribute("currUser", user);
+		
+		if (errors.hasErrors()) {
+			return "new/service_ad";
 		}
 		
-		adObject.setAdCategory(AdCategory.SERVICE);
-		adRepo.save(adObject);
+		Ad ad = adForm.toAd();
 		
-		return "redirect:/new/service_ad";
+		try {
+			for (MultipartFile photoFile : photoFiles) {
+				byte[] bytes = photoFile.getBytes();
+				Photo photo = new Photo(bytes);
+				ad.getPhotos().add(photo);
+			}
+		} catch (IOException e) {
+			log.warn(e.getMessage());
+		}
+		
+		
+		ad.setUser(user);
+		ad.setAdCategory(AdCategory.SERVICE);
+		adRepo.save(ad);
+		
+		return "redirect:/service_ad/new";
 	}
 	
+	@GetMapping("/{id}/update")
+	public String showUpdateForm(@PathVariable("id") long id, Model model,
+			@AuthenticationPrincipal User user, AdForm adForm) {
+		Ad ad = adRepo.findById(id)
+				.orElseThrow( () -> {
+					log.error("Invalid user Id: " + id);
+					throw new IllegalArgumentException("Invalid user Id: " + id);
+				});
+		
+		adForm.loadData(ad);
+		model.addAttribute("adForm", adForm);
+		model.addAttribute("currUser", user);
+		
+		return "update/service_ad";
+	}
+	
+	@PostMapping("/{id}/update")
+	public String updateAd(@PathVariable("id") long id, @Valid AdForm adForm,
+			Errors errors, Model model, @AuthenticationPrincipal User user,
+			@RequestParam("photoFiles")List<MultipartFile> photoFiles) {
+		
+		model.addAttribute("currUser", user);
+		
+		if (errors.hasErrors()) {
+			adForm.setId(id);
+			return "update/service_ad";
+		}
+		
+		Ad ad = adForm.update();
+		
+		try {
+			for (MultipartFile photoFile : photoFiles) {
+				byte[] bytes = photoFile.getBytes();
+				Photo photo = new Photo(bytes);
+				ad.getPhotos().add(photo);
+			}
+		} catch (IOException e) {
+			log.warn(e.getMessage());
+		}
+		
+		ad.setAdCategory(AdCategory.SERVICE);
+		ad.setCreatedAt(LocalDateTime.now());
+		ad.setUser(user);
+		adRepo.save(ad);
+		return "redirect:/profile";
+	}
 }

@@ -23,4 +23,11 @@ public class Apartments implements Serializable{
 	
 	private int roomsNumber;
 	private int floorLevel;
+	
+	public Apartments() {}
+	
+	public Apartments(int roomsNumber, int floorLevel) {
+		this.roomsNumber = roomsNumber;
+		this.floorLevel = floorLevel;
+	}
 }
