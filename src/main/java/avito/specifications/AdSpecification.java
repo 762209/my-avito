@@ -14,7 +14,7 @@ public class AdSpecification{
 			return null;
 		}
 		return ((root, criteriaQuery, criteriaBuilder) -> {
-			return criteriaBuilder.like(root.get(Ad_.name), criteria.getName());
+			return criteriaBuilder.like(criteriaBuilder.lower(root.get(Ad_.name)), "%"+criteria.getName().toLowerCase()+"%");
 		});
 	}
 	
@@ -23,7 +23,7 @@ public class AdSpecification{
 			return null;
 		}
 		return ((root, criteriaQuery, criteriaBuilder) -> {
-			return criteriaBuilder.equal(root.get(Ad_.city), criteria.getCity());
+			return criteriaBuilder.equal(criteriaBuilder.lower(root.get(Ad_.city)), criteria.getCity().toLowerCase());
 		});
 	}
 	

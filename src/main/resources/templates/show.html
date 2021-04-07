@@ -71,6 +71,8 @@
 			</div>
 			<div class="description">
 				<div class="textBlock" th:text="${ad.description}" /></br>
+				<span class="label">Город:</span>
+				<span class="text" th:text="${ad.city}" /> </br>
 				<div th:if="${ad.adCategory == T(avito.domain.Ad$AdCategory).CAR or
 							  ad.adCategory == T(avito.domain.Ad$AdCategory).MOTORCYCLE or
 							  ad.adCategory == T(avito.domain.Ad$AdCategory).TRUCK_AND_SPECIAL_MACHINERY}">

@@ -62,6 +62,7 @@ main {
 	color: red;
 	margin-bottom: 11px;
 	font-size: 14px;
+	min-width: 250px;
 }
 .validationError {
 	color: red;

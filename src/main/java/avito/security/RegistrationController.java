@@ -45,7 +45,10 @@ public class RegistrationController {
 	public String processRegistration(@ModelAttribute("registrationForm") @Valid RegistrationForm form,
 			Errors errors, MultipartFile photoFile) {
 		
-		if (errors.hasErrors()) {
+		RegistrationFormValidator formValidator = new RegistrationFormValidator(userRepo);
+		formValidator.validate(form, errors);
+		
+		if (errors.hasErrors() || userRepo.existsByUsername(form.getUsername())) {
 			return "registration";
 		}
 		User user = form.toUser(passwordEncoder);
