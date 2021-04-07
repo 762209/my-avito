@@ -1,10 +1,12 @@
 package avito;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +16,7 @@ import avito.domain.Ad;
 import avito.domain.Apartments;
 import avito.domain.Car;
 import avito.domain.House;
+import avito.domain.Photo;
 import avito.domain.RealEstate;
 import avito.domain.Transport;
 import avito.domain.TruckSpecMach;
@@ -33,135 +36,104 @@ public class DataFiller {
 	
 	@PostConstruct
 	public void init() throws IOException{
-//		User user1 = new User("ruslan", passwordEncoder.encode("123"), "Ruslan Alimovich", "Moscow", "Moscow", "123", "9389393");
-//		userRepo.save(user1);
-//		
-//		Car car = new Car();
-//		car.setDriveType("Полный привод");
-//		car.setEnginesType("Бензин");
-//		car.setTransmission("Автомат");
-//		Transport transport = new Transport();
-//		transport.setBrand("БМВ");
-//		transport.setCarAd(car);
-//		transport.setColor("Черный");
-//		transport.setManufactureYear("2015");
-//		transport.setMileage(56000);
-//		transport.setModel("318i");
-//		Ad carAd = new Ad();
-//		carAd.setTransportAd(transport);
-//		carAd.setAdCategory(AdCategory.CAR);
-//		carAd.setAdress("Ленинский пр-т");
-//		carAd.setCity("Москва");
-//		carAd.setDescription("Хорошая тачка");
-//		carAd.setName("Продам бэху");
-//		carAd.setPrice(3000000);
-//		carAd.setUser(user1);
-//		adRepo.save(carAd);
-//		
-//		TruckSpecMach truck = new TruckSpecMach();
-//		truck.setOperatingTime(3467);
-//		Transport transport2 = new Transport();
-//		transport2.setBrand("Komatsu");
-//		transport2.setTruckSpecMachAd(truck);
-//		transport2.setColor("Синий");
-//		transport2.setManufactureYear("2013");
-//		transport2.setMileage(2000);
-//		transport2.setModel("PC300-8");
-//		Ad truckAd = new Ad();
-//		truckAd.setTransportAd(transport2);
-//		truckAd.setAdCategory(AdCategory.TRUCK_AND_SPECIAL_MACHINERY);
-//		truckAd.setAdress("Кантемировская пр-т");
-//		truckAd.setCity("Москва");
-//		truckAd.setDescription("Хорошая экскаватор");
-//		truckAd.setName("Продам экскаватор KomatsuPC300-8");
-//		truckAd.setPrice(12000000);
-//		truckAd.setUser(user1);
-//		adRepo.save(truckAd);
-//		
-//		Transport transport3 = new Transport();
-//		transport3.setBrand("Hayabuza");
-//		transport3.setColor("Красный");
-//		transport3.setManufactureYear("208");
-//		transport3.setMileage(2000);
-//		transport3.setModel("340 RJ");
-//		Ad motorcycleAd = new Ad();
-//		motorcycleAd.setTransportAd(transport3);
-//		motorcycleAd.setAdCategory(AdCategory.MOTORCYCLE);
-//		motorcycleAd.setAdress("Кантемировская пр-т");
-//		motorcycleAd.setCity("Москва");
-//		motorcycleAd.setDescription("Хорошая байк");
-//		motorcycleAd.setName("Продам мотоцикл Hayabuza");
-//		motorcycleAd.setPrice(300000);
-//		motorcycleAd.setUser(user1);
-//		adRepo.save(motorcycleAd);
-//		
-//		Apartments apartments = new Apartments();
-//		apartments.setFloorLevel(44);
-//		apartments.setRoomsNumber(3);
-//		RealEstate realEstate = new RealEstate();
-//		realEstate.setApartmentsAd(apartments);
-//		realEstate.setFloorArea(120);
-//		Ad apartmentsAd = new Ad();
-//		apartmentsAd.setRealEstateAd(realEstate);
-//		apartmentsAd.setAdCategory(AdCategory.APARTMENTS);
-//		apartmentsAd.setAdress("Ленинский пр-т");
-//		apartmentsAd.setCity("Москва");
-//		apartmentsAd.setDescription("Хорошая квартира");
-//		apartmentsAd.setName("Продам квартиру в новостройке");
-//		apartmentsAd.setPrice(15000000);
-//		apartmentsAd.setUser(user1);
-//		adRepo.save(apartmentsAd);
-//		
-//		House house = new House();
-//		house.setFloorLevels(3);
-//		house.setLandArea(300);
-//		RealEstate realEstate2 = new RealEstate();
-//		realEstate2.setHouseAd(house);
-//		realEstate2.setFloorArea(250);
-//		Ad houseAd = new Ad();
-//		houseAd.setRealEstateAd(realEstate2);
-//		houseAd.setAdCategory(AdCategory.HOUSES);
-//		houseAd.setAdress("Улица пивоваров дом 65");
-//		houseAd.setCity("Можайск");
-//		houseAd.setDescription("Хороший дом");
-//		houseAd.setName("Продам дачу в Можайске");
-//		houseAd.setPrice(4000000);
-//		houseAd.setUser(user1);
-//		adRepo.save(houseAd);
-//		
-//		RealEstate realEstate3 = new RealEstate();
-//		realEstate3.setFloorArea(20);
-//		Ad garageAd = new Ad();
-//		garageAd.setRealEstateAd(realEstate3);
-//		garageAd.setAdCategory(AdCategory.GARAGE);
-//		garageAd.setAdress("Улица пивоваров дом 65");
-//		garageAd.setCity("Можайск");
-//		garageAd.setDescription("Хороший гараж");
-//		garageAd.setName("Продам гараж в Можайске");
-//		garageAd.setPrice(80000);
-//		garageAd.setUser(user1);
-//		adRepo.save(garageAd);
-//		
-//		Ad animalAd = new Ad();
-//		animalAd.setAdCategory(AdCategory.ANIMAL);
-//		animalAd.setAdress("Ленинский пр-т");
-//		animalAd.setCity("Москва");
-//		animalAd.setDescription("Хорошая кошка");
-//		animalAd.setName("Маруська");
-//		animalAd.setPrice(3000);
-//		animalAd.setUser(user1);
-//		adRepo.save(animalAd);
-//		
-//		Ad serviceAd = new Ad();
-//		serviceAd.setAdCategory(AdCategory.SERVICE);
-//		serviceAd.setAdress("Ленинский пр-т");
-//		serviceAd.setCity("Москва");
-//		serviceAd.setDescription("Хорошие услуги");
-//		serviceAd.setName("Уборка дома");
-//		serviceAd.setPrice(2000);
-//		serviceAd.setUser(user1);
-//		adRepo.save(serviceAd);
-//		
-//		log.info("Fill with test data");
+		User user1 = new User("sveta", passwordEncoder.encode("123"), "Светлана Владимировна",
+				"улица Металлургов дом 5", "Москва", "119042", "89108506942");
+		User user2 = new User("nika", passwordEncoder.encode("123"), "Николай Алексеевич",
+				"улица Дорохова дом 54", "Санкт-Петербург", "120358", "89055556982");
+		User user3 = new User("olga", passwordEncoder.encode("123"), "Ольга Ярославна",
+				"улица Мневники дом 3", "Москва", "119068", "89647256984");
+		User user4 = new User("dmitrii", passwordEncoder.encode("123"), "Дмитрий Анатольевич",
+				"Щёлковское шоссе дом 50", "Санкт-Петербург", "120869", "89076593296");
+		
+		userRepo.save(user1); userRepo.save(user2);
+		userRepo.save(user3); userRepo.save(user4);
+		
+		
+		byte[] img1 = new ClassPathResource("/static/images/test1.png")
+				.getInputStream()
+				.readAllBytes();
+		byte[] img2 = new ClassPathResource("/static/images/test2.png")
+				  .getInputStream()
+				  .readAllBytes();
+		byte[] img3 = new ClassPathResource("/static/images/test3.png")
+				  .getInputStream()
+				  .readAllBytes();
+		
+		
+		Ad ad1 = new Ad("Продам машину BMW 318i", "Машина не бита не крашена, в хорошем состоянии, обслуживалась у официального дилера",
+				3000000l, "Москва", "улица Металлургов дом 5", AdCategory.CAR);
+		Car car1 = new Car("Автомат", "Полный привод", "Бензин");
+		Transport transport1 = new Transport("318i", "BMW", "Чёрный", "2015", 32000);
+		transport1.setCarAd(car1);
+		ad1.setTransportAd(transport1);
+		Collections.addAll(ad1.getPhotos(), new Photo(img1), new Photo(img2), new Photo(img3));
+		
+		Ad ad2 = new Ad("Продам собаку", "Хороший пёс, дрессированный",
+				5000l, "Москва", "улица Металлургов дом 5", AdCategory.ANIMAL);
+		Collections.addAll(ad2.getPhotos(), new Photo(img2), new Photo(img1), new Photo(img3));
+		
+		Ad ad3 = new Ad("Продам кота", "Хороший кот, в хорошем состоянии",
+				3000l, "Москва", "улица Металлургов дом 5", AdCategory.ANIMAL);
+		Collections.addAll(ad3.getPhotos(), new Photo(img3), new Photo(img2), new Photo(img1));
+		
+		Ad ad4 = new Ad("Продам квартиру", "Квартира с евроремонтом. Находится рядом с метро Беляево",
+				7000000l, "Санкт-Петербург", "улица Дорохова дом 54", AdCategory.APARTMENTS);
+		Apartments apartments1 = new Apartments(3, 7);
+		RealEstate realEstate1 = new RealEstate(150);
+		realEstate1.setApartmentsAd(apartments1);
+		ad4.setRealEstateAd(realEstate1);
+		Collections.addAll(ad4.getPhotos(), new Photo(img1), new Photo(img2), new Photo(img3));
+		
+		Ad ad5 = new Ad("Продам гараж", "Гараж на 2 машиноместа. Находится рядом с метро Беляево",
+				300000l, "Санкт-Петербург", "улица Дорохова дом 54", AdCategory.GARAGE);
+		RealEstate realEstate2 = new RealEstate(50);
+		ad5.setRealEstateAd(realEstate2);
+		Collections.addAll(ad5.getPhotos(), new Photo(img3), new Photo(img2), new Photo(img1));
+		
+		Ad ad6 = new Ad("Продам мотоцикл", "Мотоцикл в хорошем состоянии",
+				600000l, "Санкт-Петербург", "улица Дорохова дом 54", AdCategory.MOTORCYCLE);
+		Transport transport2 = new Transport("R301", "Hayabuza", "Зёлёный", "2018", 48000);
+		ad6.setTransportAd(transport2);
+		Collections.addAll(ad6.getPhotos(), new Photo(img2), new Photo(img1), new Photo(img3));
+		
+		Ad ad7 = new Ad("Продам дом", "Частный дом с участком в Москве",
+				3600000l, "Москва", "улица Мневники дом 3", AdCategory.HOUSES);
+		House house1 = new House(1000, 4);
+		RealEstate realEstate3 = new RealEstate(30);
+		realEstate3.setHouseAd(house1);
+		ad7.setRealEstateAd(realEstate3);
+		Collections.addAll(ad7.getPhotos(), new Photo(img1), new Photo(img2), new Photo(img3));
+		
+		Ad ad8 = new Ad("Продам экскаватор", "Экскаватор Komatsu PC300-8. В хорошем состоянии работает без нареканий",
+				15000000l, "Москва", "улица Мневники дом 3", AdCategory.TRUCK_AND_SPECIAL_MACHINERY);
+		Transport transport4 = new Transport("PC300-8", "Komatsu", "Жёлтый", "2013", 1500);
+		TruckSpecMach truckSpecMach1 = new TruckSpecMach(9054);
+		transport4.setTruckSpecMachAd(truckSpecMach1);
+		ad8.setTransportAd(transport4);
+		Collections.addAll(ad8.getPhotos(), new Photo(img2), new Photo(img3), new Photo(img1));
+		
+		Ad ad9 = new Ad("Экскватор в аренду", "Экскаватор Komatsu PC300-8. В хорошем состоянии работает без нареканий",
+				18000l, "Москва", "улица Мневники дом 3", AdCategory.SERVICE);
+		Collections.addAll(ad9.getPhotos(), new Photo(img3), new Photo(img2), new Photo(img1));
+		
+		
+		
+		for (int i = 0; i < 30; i++) {
+			Ad ad10 = new Ad("Прочие услуги " + i, "Оказываем прочие услуги " + i,
+					5000l, "Санкт-Петербург", "Щёлковское шоссе дом 50", AdCategory.SERVICE);
+			ad10.setUser(user4);
+			Collections.addAll(ad10.getPhotos(), new Photo(img1), new Photo(img2), new Photo(img3));
+			adRepo.save(ad10);
+		}
+		
+		ad1.setUser(user1); ad2.setUser(user1); ad3.setUser(user1);
+		ad4.setUser(user2); ad5.setUser(user2); ad6.setUser(user2);
+		ad7.setUser(user3); ad8.setUser(user3); ad9.setUser(user3);
+		
+		adRepo.save(ad9); adRepo.save(ad8); adRepo.save(ad7);
+		adRepo.save(ad6); adRepo.save(ad5); adRepo.save(ad4);
+		adRepo.save(ad3); adRepo.save(ad2); adRepo.save(ad1);
+		
+		log.info("Fill with test data");
 	}
 }
